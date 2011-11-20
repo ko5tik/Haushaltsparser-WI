@@ -111,6 +111,11 @@
             <artifactId>itextpdf</artifactId>
             <version>5.1.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy</artifactId>
+            <version>1.8.3</version>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>

@@ -19,6 +19,8 @@ import java.io.IOException;
 public class BudgetParser {
 
     public static final int PAGE_NUM = 696;
+    public static final String ORGANISATIONSEINHEIT = "Organisation";
+    public static final String KOSTENSSTELLENPREFIX = "Kostens";
 
     /**
      * parse and process document
@@ -46,10 +48,67 @@ public class BudgetParser {
         PdfReaderContentParser parser = new PdfReaderContentParser(pdfReader);
 
         final SimpleTextExtractionStrategy renderListener = new SimpleTextExtractionStrategy();
-        parser.processContent(PAGE_NUM, renderListener);
 
-        System.out.println(renderListener.getResultantText());
+
+        final String[] lines = parser.processContent(PAGE_NUM, renderListener).getResultantText().split("\n");
+
+        // page processed,  gather  usefull information
+        for (String line : lines) {
+            System.out.println("line:" + line);
+        }
+
+
+        int lineIndex = 0;
+
+        // extract organisational entity
+        String entity = null;
+        String amt = null;
+        String kostenstelle = null;
+        String title;
+        for (; lineIndex < lines.length; lineIndex++) {
+            final String line = lines[lineIndex];
+            System.out.println(line);
+            final String[] fragments = line.trim().split(":");
+
+            if (fragments[0].startsWith(ORGANISATIONSEINHEIT)) {
+                entity = fragments[1].trim();
+                System.out.println("entity:" + entity);
+            } else if (fragments[0].startsWith(KOSTENSSTELLENPREFIX)) {
+                final String[] split = fragments[1].trim().split("\\s+");
+                kostenstelle = split[0];
+                amt = split[1];
+
+                final StringBuilder titleBuilder = new StringBuilder();
+                for (int i = 2; i < split.length; i++) {
+                    titleBuilder.append(split[i]).append(" ");
+                }
+                title = titleBuilder.toString().trim();
+
+                System.out.println("amt:" + amt);
+                System.out.println("kostenstelle:" + kostenstelle);
+                System.out.println("title:" + title);
+
+                break;
+            }
+        }
+        lineIndex++;
+
+        // bypass all the lines until "Position
+        for (; lineIndex < lines.length; lineIndex++) {
+            if (lines[lineIndex].trim().startsWith("Position")) {
+
+                break;
+            }
+        }
+
+        lineIndex++;
+
+        // from here we have content lines
+        for (; lineIndex < lines.length; lineIndex++) {
+
+        }
     }
+
 
     static void printRecursive(String prefix, PdfDictionary dictionary) {
         for (PdfName key : dictionary.getKeys()) {
