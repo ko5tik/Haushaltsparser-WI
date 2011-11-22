@@ -4,14 +4,16 @@
 
 package de.pribluda.pirate.barser;
 
-import com.itextpdf.text.pdf.PdfDictionary;
-import com.itextpdf.text.pdf.PdfName;
-import com.itextpdf.text.pdf.PdfObject;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfReaderContentParser;
 import com.itextpdf.text.pdf.parser.SimpleTextExtractionStrategy;
+import de.pribluda.pirate.barser.beans.Dezernat;
+import de.pribluda.pirate.barser.beans.Kostenstelle;
+import de.pribluda.pirate.barser.beans.Position;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -19,8 +21,7 @@ import java.io.IOException;
 public class BudgetParser {
 
     public static final int PAGE_NUM = 696;
-    public static final String ORGANISATIONSEINHEIT = "Organisation";
-    public static final String KOSTENSSTELLENPREFIX = "Kostens";
+
 
     /**
      * parse and process document
@@ -38,13 +39,13 @@ public class BudgetParser {
         // open PDF file
         final PdfReader pdfReader = new PdfReader(args[0]);
 
-        final PdfDictionary pageDictionary = pdfReader.getPageN(PAGE_NUM);
 
-        System.out.println("page dictionary:\t" + pageDictionary.toString());
+        processPage(pdfReader);
+    }
 
-        //printRecursive("\t", pageDictionary);
+    private static Kostenstelle processPage(PdfReader pdfReader) throws IOException {
 
-
+        Kostenstelle result = new Kostenstelle();
         PdfReaderContentParser parser = new PdfReaderContentParser(pdfReader);
 
         final SimpleTextExtractionStrategy renderListener = new SimpleTextExtractionStrategy();
@@ -52,72 +53,75 @@ public class BudgetParser {
 
         final String[] lines = parser.processContent(PAGE_NUM, renderListener).getResultantText().split("\n");
 
-        // page processed,  gather  usefull information
-        for (String line : lines) {
-            System.out.println("line:" + line);
-        }
-
 
         int lineIndex = 0;
+        Dezernat dezernat = null;
 
         // extract organisational entity
-        String entity = null;
-        String amt = null;
-        String kostenstelle = null;
-        String title;
         for (; lineIndex < lines.length; lineIndex++) {
-            final String line = lines[lineIndex];
-            System.out.println(line);
-            final String[] fragments = line.trim().split(":");
-
-            if (fragments[0].startsWith(ORGANISATIONSEINHEIT)) {
-                entity = fragments[1].trim();
-                System.out.println("entity:" + entity);
-            } else if (fragments[0].startsWith(KOSTENSSTELLENPREFIX)) {
-                final String[] split = fragments[1].trim().split("\\s+");
-                kostenstelle = split[0];
-                amt = split[1];
-
-                final StringBuilder titleBuilder = new StringBuilder();
-                for (int i = 2; i < split.length; i++) {
-                    titleBuilder.append(split[i]).append(" ");
-                }
-                title = titleBuilder.toString().trim();
-
-                System.out.println("amt:" + amt);
-                System.out.println("kostenstelle:" + kostenstelle);
-                System.out.println("title:" + title);
-
+            dezernat = DataParser.parseAmt(lines[lineIndex]);
+            if (dezernat != null)
                 break;
-            }
         }
-        lineIndex++;
 
-        // bypass all the lines until "Position
+
+        System.out.println("dezernat:" + dezernat);
+
+        // parse until we get proper kostenstelle
+        // extract organisational entity
         for (; lineIndex < lines.length; lineIndex++) {
-            if (lines[lineIndex].trim().startsWith("Position")) {
-
+            result = DataParser.parseKostenstelle(lines[lineIndex]);
+            if (result != null)
                 break;
-            }
         }
 
-        lineIndex++;
+        System.out.println("Kostenstelle:" + result);
 
-        // from here we have content lines
+        // now we got kostenstelle,  skip  to real positions
+
         for (; lineIndex < lines.length; lineIndex++) {
-
+            if (lines[lineIndex].trim().startsWith("Position"))
+                break;
         }
+
+        // process indicivudal positions
+        for (; lineIndex < lines.length; lineIndex++) {
+            if (lines[lineIndex].length() < 15)
+                continue;
+
+            final List<String> parts = DataParser.splitPosition(lines[lineIndex]);
+
+            Position position = new Position();
+            position.setName(parts.get(0));
+
+            position.setData(new HashMap<String, Integer>());
+
+            Integer value = DataParser.processNumber(parts.get(1));
+            if (value != null) {
+                position.getData().put("2011", value);
+
+            }
+
+            value = DataParser.processNumber(parts.get(2));
+            if (value != null) {
+                position.getData().put("2010", value);
+            }
+
+            value = DataParser.processNumber(parts.get(3));
+            if (value != null) {
+                position.getData().put("2009", value);
+            }
+
+            value = DataParser.processNumber(parts.get(4));
+            if (value != null) {
+                position.getData().put("2008", value);
+            }
+
+            System.out.println("position:" + position);
+        }
+
+        return result;
     }
 
 
-    static void printRecursive(String prefix, PdfDictionary dictionary) {
-        for (PdfName key : dictionary.getKeys()) {
-            final PdfObject pdfObject = dictionary.get(key);
-            System.out.println(prefix + key + " / " + pdfObject + " / " + pdfObject.getClass());
-            if (pdfObject instanceof PdfDictionary) {
-                printRecursive("\t" + prefix, (PdfDictionary) pdfObject);
-            }
-        }
-
-    }
 }
