@@ -50,7 +50,7 @@ public class DataParser {
 
             kostenstele.setAmt(amt);
             kostenstele.setName(name);
-
+            kostenstele.setTitle(titleBuilder.toString().trim());
             return kostenstele;
         }
         return null;
