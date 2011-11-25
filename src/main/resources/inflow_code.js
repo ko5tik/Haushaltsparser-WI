@@ -15,28 +15,23 @@ var renderFlow = function(config, flowData) {
     for (var tapIndex in config.taps) {
         var tap = config.taps[tapIndex];
         if (tap.total) {
-            totalTapSizes += tap[total];
+            totalTapSizes += tap.total;
             amountOfTaps++;
         }
     }
 
-    var totalSinkSizes = 0;
-    var amountIfSinks = 0;
-    for (sink in config.sinks) {
-        if (sink.total) {
-            totalSinkSizes += sink.total;
-            amountIfSinks++;
-        }
-    }
 
-// now compute individual tap sizes and positions, taking tap spacing into account
+    // now compute individual tap sizes and positions, taking tap spacing into account
     var totalTapArea = totalTapSizes - config.bucketSpacing * (amountOfTaps - 1);
     var top = 0;
 
-    for (tap in config.taps) {
-        tap.top = top;
-        tap.height = tap.total * totalTapArea / totalTapSizes;
-        top = top + tap.height + config.bucketSpacing;
+    for (var tapIndex in config.taps) {
+        var tap = config.taps[tapIndex];
+        if (tap.total) {
+            tap.top = top;
+            tap.height = tap.total * totalTapArea / totalTapSizes;
+            top = top + tap.height + config.bucketSpacing;
+        }
     }
 
 
