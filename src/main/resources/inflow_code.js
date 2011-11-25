@@ -22,7 +22,7 @@ var renderFlow = function(config, flowData) {
 
 
     // now compute individual tap sizes and positions, taking tap spacing into account
-    var totalTapArea = totalTapSizes - config.bucketSpacing * (amountOfTaps - 1);
+    var totalTapArea = config.height - config.bucketSpacing * (amountOfTaps - 1);
     var top = 0;
 
     for (var tapIndex in config.taps) {
