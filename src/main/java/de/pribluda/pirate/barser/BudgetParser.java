@@ -35,8 +35,8 @@ public class BudgetParser {
      */
     public static void main(String[] args) throws IOException {
 
-        if (args.length < 3) {
-            System.err.println("usage: budgetParser <pdf file name> <fromPage> <toPage>");
+        if (args.length < 1) {
+            System.err.println("usage: budgetParser <pdf file name>");
             System.exit(-1);
         }
 
@@ -44,12 +44,29 @@ public class BudgetParser {
         // open PDF file
         final PdfReader pdfReader = new PdfReader(args[0]);
 
-        int from = Integer.parseInt(args[1]);
-        int to = Integer.parseInt(args[2]);
+
         Mongo m = new Mongo();
         DB db = m.getDB("mydb");
         DBCollection coll = db.getCollection("positions");
 
+        // dezernat 1
+        processRange(pdfReader, 64, 234, coll);
+        // dezernat 2
+        processRange(pdfReader, 246, 274, coll);
+        // dezernat 4
+        processRange(pdfReader, 285, 327, coll);
+        //dezernat 5
+         processRange(pdfReader, 340, 452, coll);
+        //dezernat 6
+         processRange(pdfReader, 461, 601, coll);
+        // dezernat 7
+         processRange(pdfReader, 612, 636, coll);
+        // dezernat 8
+         processRange(pdfReader, 645, 816, coll);
+
+    }
+
+    private static void processRange(PdfReader pdfReader, int from, int to, DBCollection coll) throws IOException {
         for (int i = from; i <= to; i++) {
             System.err.println("processing page: " + i);
             processPage(pdfReader, coll, i);
