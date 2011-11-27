@@ -111,8 +111,3 @@ var renderFlow = function(config, flowData) {
 
 
 };
-
-
-$(function () {
-    renderFlow(inflowConfig, flowData)
-});

@@ -37,8 +37,7 @@ var inflowConfig = {
 
         }
     ]
-}
-    ;
+};
 
 
 // dataset
