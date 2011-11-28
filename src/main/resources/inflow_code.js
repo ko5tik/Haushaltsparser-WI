@@ -3,26 +3,86 @@ var renderFlow = function(config, flowData) {
     const bezierOffset = 50;
     var r = Raphael("chart", config.width, config.height);
 
-    // iterate over taps and compute total amount  for each of them
-    var grandTotal = computeTotals(config.taps, flowData);
+
+    var taps = [];
+    var sinks = [];
+
+    // pre-populate taps
+    $.each(config.taps, function(idx, tap) {
+
+        taps.push({
+            "caption": bin.caption,
+            "attrs": bin.attrs,
+            "value": 0,
+            "connectors": [],
+            "top": 0
+        });
+    });
+
+    // total amount of pixels in question
+    var grandTotal = 0;
+
+
+    $.each(flowData, function(idx, value) {
+        //  populate sink,  copy all the interesting properties
+        var sink = {
+            "title": value.title,
+            "attrs":value.attrs,
+            "value": 0,
+            "connectors": [],
+            "top": 0
+        };
+
+        sinks.push(sink);
+
+        $.each(taps, function(idx, tap) {
+            //  entry has something for this bin?
+            if (value[bin.out]) {
+                // connector
+                var connector = {
+                    "value": dataValue,
+                    "tap":tap,
+                    "sink":sink,
+                    "tapOffset":tap.value,
+                    "sinkOffset":sink.value
+                };
+
+
+                var dataValue = value[bin.out];
+
+                tap.value += dataValue;
+                sink.value += dataValue;
+
+                // advance grand total
+                grandTotal += dataValue;
+
+                // connect objects
+                tap.connectors.push(connector);
+                sink.connectors.push(connector);
+            }
+        });
+
+
+    });
+
+    // scale factor for display
     var scaleFactor = config.height / grandTotal;
 
     var top = 0;
 
 
-    // draw  taps
-
-    $.each(config.taps, function(idx, tap) {
-        if (tap.total) {
+    // draw  taps and compute offsets
+    $.each(taps, function(idx, tap) {
+        if (tap.value > 0) {
             tap.top = top;
 
             tap.height = tap.total * scaleFactor;
-            top = top + tap.height + config.bucketSpacing;
+            top = top + tap.height;
             drawRectWithCaption(r, tap.caption + " (" + tap.total + ")", 0, tap.top, config.bucketWidth, tap.height, tap.attr);
         }
     });
 
-    //draw positions
+//draw positions
     top = 0;
 
     $.each(flowData, function(idx, entry) {
@@ -33,7 +93,7 @@ var renderFlow = function(config, flowData) {
     });
 
 
-    // draw connections, iterate over taps  and draw connecting lines
+// draw connections, iterate over taps  and draw connecting lines
     $.each(config.taps, function(idx, tap) {
         // where to start on tap side
         var tapFrom = tap.top;
@@ -79,9 +139,9 @@ var renderFlow = function(config, flowData) {
     });
 
 
-    //////////////////////////////////////////////////////////
-    // computes total amount for individual bins accumulating values from
-    // supplied data
+//////////////////////////////////////////////////////////
+// computes total amount for individual bins accumulating values from
+// supplied data
     function computeTotals(bins, flowData) {
         var grandTotal = 0;
 
@@ -103,11 +163,12 @@ var renderFlow = function(config, flowData) {
         return grandTotal;
     }
 
-    // draw rectangle with caption
+// draw rectangle with caption
     function drawRectWithCaption(r, caption, x, y, w, h, attr) {
         r.rect(x, y, w, h).attr(attr);
         r.text(x + w / 2, y + h / 2, caption);
     }
 
 
-};
+}
+    ;
