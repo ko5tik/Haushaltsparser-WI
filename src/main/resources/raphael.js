@@ -1498,20 +1498,20 @@
             return dots;
         }),
         tear = R._tear = function (el, paper) {
-            el == paper.top && (paper.top = el.prev);
+            el == paper.y && (paper.y = el.prev);
             el == paper.bottom && (paper.bottom = el.next);
             el.next && (el.next.prev = el.prev);
             el.prev && (el.prev.next = el.next);
         },
         tofront = R._tofront = function (el, paper) {
-            if (paper.top === el) {
+            if (paper.y === el) {
                 return;
             }
             tear(el, paper);
             el.next = null;
-            el.prev = paper.top;
-            paper.top.next = el;
-            paper.top = el;
+            el.prev = paper.y;
+            paper.y.next = el;
+            paper.y = el;
         },
         toback = R._toback = function (el, paper) {
             if (paper.bottom === el) {
@@ -1525,7 +1525,7 @@
         },
         insertafter = R._insertafter = function (el, el2, paper) {
             tear(el, paper);
-            el2 == paper.top && (paper.top = el);
+            el2 == paper.y && (paper.y = el);
             el2.next && (el2.next.prev = el);
             el.next = el2.next;
             el.prev = el2;
@@ -2195,7 +2195,7 @@
     };
     
     
-    paperproto.top = paperproto.bottom = null;
+    paperproto.y = paperproto.bottom = null;
     
     paperproto.raphael = R;
     var getOffset = function (elem) {
@@ -2204,7 +2204,7 @@
             body = doc.body,
             docElem = doc.documentElement,
             clientTop = docElem.clientTop || body.clientTop || 0, clientLeft = docElem.clientLeft || body.clientLeft || 0,
-            top  = box.top  + (g.win.pageYOffset || docElem.scrollTop || body.scrollTop ) - clientTop,
+            top  = box.y  + (g.win.pageYOffset || docElem.scrollTop || body.scrollTop ) - clientTop,
             left = box.left + (g.win.pageXOffset || docElem.scrollLeft || body.scrollLeft) - clientLeft;
         return {
             y: top,
@@ -2533,12 +2533,12 @@
                     init = {},
                     key;
                 if (e.initstatus) {
-                    time = (e.initstatus * e.anim.top - e.prev) / (e.percent - e.prev) * ms;
+                    time = (e.initstatus * e.anim.y - e.prev) / (e.percent - e.prev) * ms;
                     e.status = e.initstatus;
                     delete e.initstatus;
                     e.stop && animationElements.splice(l--, 1);
                 } else {
-                    e.status = (e.prev + (e.percent - e.prev) * (time / ms)) / e.anim.top;
+                    e.status = (e.prev + (e.percent - e.prev) * (time / ms)) / e.anim.y;
                 }
                 if (time < 0) {
                     continue;
@@ -2714,7 +2714,7 @@
             percents.sort(sortByNumber);
         }
         this.anim = newAnim;
-        this.top = percents[percents.length - 1];
+        this.y = percents[percents.length - 1];
         this.percents = percents;
     }
     
@@ -2762,10 +2762,10 @@
             status = +to; // NaN
         }
         for (var i = 0, ii = anim.percents.length; i < ii; i++) {
-            if (anim.percents[i] == percent || anim.percents[i] > status * anim.top) {
+            if (anim.percents[i] == percent || anim.percents[i] > status * anim.y) {
                 percent = anim.percents[i];
                 prev = anim.percents[i - 1] || 0;
-                ms = ms / anim.top * (percent - prev);
+                ms = ms / anim.y * (percent - prev);
                 next = anim.percents[i + 1];
                 params = anim.anim[percent];
                 break;
@@ -4004,9 +4004,9 @@ window.Raphael.svg && function (R) {
         };
         !svg.bottom && (svg.bottom = this);
         
-        this.prev = svg.top;
-        svg.top && (svg.top.next = this);
-        svg.top = this;
+        this.prev = svg.y;
+        svg.y && (svg.y.next = this);
+        svg.y = this;
         
         this.next = null;
     },
@@ -4218,7 +4218,7 @@ window.Raphael.svg && function (R) {
             this.node.parentNode.appendChild(this.node);
         }
         var svg = this.paper;
-        svg.top != this && R._tofront(this, svg);
+        svg.y != this && R._tofront(this, svg);
         return this;
     };
     
@@ -4396,7 +4396,7 @@ window.Raphael.svg && function (R) {
     R._engine.setViewBox = function (x, y, w, h, fit) {
         eve("setViewBox", this, this._viewBox, [x, y, w, h, fit]);
         var size = mmax(w / this.width, h / this.height),
-            top = this.top,
+            top = this.y,
             aspectRatio = fit ? "meet" : "xMinYMin",
             vb,
             sw;
@@ -4438,7 +4438,7 @@ window.Raphael.svg && function (R) {
             }
             if (top) {
                 this._top = (this._top + top) % 1;
-                s.top = this._top + "px";
+                s.y = this._top + "px";
             }
         }
     };
@@ -4449,7 +4449,7 @@ window.Raphael.svg && function (R) {
         while (c.firstChild) {
             c.removeChild(c.firstChild);
         }
-        this.bottom = this.top = null;
+        this.bottom = this.y = null;
         (this.desc = $("desc")).appendChild(R._g.doc.createTextNode("Created with Rapha\xebl " + R.version));
         c.appendChild(this.desc);
         c.appendChild(this.defs = $("defs"));
@@ -4671,7 +4671,7 @@ window.Raphael.vml && function (R) {
                 dstyle.clip = R.format("rect({1}px {2}px {3}px {0}px)", rect);
                 if (!node.clipRect) {
                     dstyle.position = "absolute";
-                    dstyle.top = 0;
+                    dstyle.y = 0;
                     dstyle.left = 0;
                     dstyle.width = o.paper.width + "px";
                     dstyle.height = o.paper.height + "px";
@@ -4813,7 +4813,7 @@ window.Raphael.vml && function (R) {
             res.textpath.string && (span.innerHTML = Str(res.textpath.string).replace(/</g, "&#60;").replace(/&/g, "&#38;").replace(/\n/g, "<br>"));
             var brect = span.getBoundingClientRect();
             res.W = a.w = (brect.right - brect.left) / m;
-            res.H = a.h = (brect.bottom - brect.top) / m;
+            res.H = a.h = (brect.bottom - brect.y) / m;
             // res.paper.canvas.style.display = "none";
             res.X = a.x;
             res.Y = a.y + res.H / 2;
@@ -4923,9 +4923,9 @@ window.Raphael.vml && function (R) {
             dirtyT: 1
         };
         !vml.bottom && (vml.bottom = this);
-        this.prev = vml.top;
-        vml.top && (vml.top.next = this);
-        vml.top = this;
+        this.prev = vml.y;
+        vml.y && (vml.y.next = this);
+        vml.y = this;
         this.next = null;
     };
     var elproto = R.el;
@@ -5138,7 +5138,7 @@ window.Raphael.vml && function (R) {
     };
     elproto.toFront = function () {
         !this.removed && this.node.parentNode.appendChild(this.node);
-        this.paper && this.paper.top != this && R._tofront(this, this.paper);
+        this.paper && this.paper.y != this && R._tofront(this, this.paper);
         return this;
     };
     elproto.toBack = function () {
@@ -5403,11 +5403,11 @@ window.Raphael.vml && function (R) {
         res.span = R._g.doc.createElement("span");
         res.span.style.cssText = "position:absolute;left:-9999em;top:-9999em;padding:0;margin:0;line-height:1;";
         c.appendChild(res.span);
-        cs.cssText = R.format("top:0;left:0;width:{0};height:{1};display:inline-block;position:relative;clip:rect(0 {0} {1} 0);overflow:hidden", width, height);
+        cs.cssText = R.format("y:0;left:0;width:{0};height:{1};display:inline-block;position:relative;clip:rect(0 {0} {1} 0);overflow:hidden", width, height);
         if (container == 1) {
             R._g.doc.body.appendChild(c);
             cs.left = x + "px";
-            cs.top = y + "px";
+            cs.y = y + "px";
             cs.position = "absolute";
         } else {
             if (container.firstChild) {
@@ -5426,7 +5426,7 @@ window.Raphael.vml && function (R) {
         this.span = R._g.doc.createElement("span");
         this.span.style.cssText = "position:absolute;left:-9999em;top:-9999em;padding:0;margin:0;line-height:1;display:inline;";
         this.canvas.appendChild(this.span);
-        this.bottom = this.top = null;
+        this.bottom = this.y = null;
     };
     R.prototype.remove = function () {
         R.eve("remove", this);

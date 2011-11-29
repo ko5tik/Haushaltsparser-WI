@@ -1509,7 +1509,7 @@ jQuery.support = (function() {
 		jQuery.extend( testElementStyle, {
 			position: "absolute",
 			left: "-999px",
-			top: "-999px"
+			y: "-999px"
 		});
 	}
 	for ( i in testElementStyle ) {
@@ -1637,11 +1637,11 @@ jQuery.support = (function() {
 		};
 
 		inner.style.position = "fixed";
-		inner.style.top = "20px";
+		inner.style.y = "20px";
 
 		// safari subtracts parent border width here which is 5px
 		offsetSupport.fixedPosition = ( inner.offsetTop === 20 || inner.offsetTop === 15 );
-		inner.style.position = inner.style.top = "";
+		inner.style.position = inner.style.y = "";
 
 		outer.style.overflow = "hidden";
 		outer.style.position = "relative";
@@ -8980,7 +8980,7 @@ if ( "getBoundingClientRect" in document.documentElement ) {
 
 		// Make sure we're not dealing with a disconnected DOM node
 		if ( !box || !jQuery.contains( docElem, elem ) ) {
-			return box ? { top: box.top, left: box.left } : { top: 0, left: 0 };
+			return box ? { y: box.y, left: box.left } : { y: 0, left: 0 };
 		}
 
 		var body = doc.body,
@@ -8989,10 +8989,10 @@ if ( "getBoundingClientRect" in document.documentElement ) {
 			clientLeft = docElem.clientLeft || body.clientLeft || 0,
 			scrollTop  = win.pageYOffset || jQuery.support.boxModel && docElem.scrollTop  || body.scrollTop,
 			scrollLeft = win.pageXOffset || jQuery.support.boxModel && docElem.scrollLeft || body.scrollLeft,
-			top  = box.top  + scrollTop  - clientTop,
+			top  = box.y  + scrollTop  - clientTop,
 			left = box.left + scrollLeft - clientLeft;
 
-		return { top: top, left: left };
+		return { y: top, left: left };
 	};
 
 } else {
@@ -9064,7 +9064,7 @@ if ( "getBoundingClientRect" in document.documentElement ) {
 			left += Math.max( docElem.scrollLeft, body.scrollLeft );
 		}
 
-		return { top: top, left: left };
+		return { y: top, left: left };
 	};
 }
 
@@ -9079,7 +9079,7 @@ jQuery.offset = {
 			left += parseFloat( jQuery.css(body, "marginLeft") ) || 0;
 		}
 
-		return { top: top, left: left };
+		return { y: top, left: left };
 	},
 
 	setOffset: function( elem, options, i ) {
@@ -9092,7 +9092,7 @@ jQuery.offset = {
 
 		var curElem = jQuery( elem ),
 			curOffset = curElem.offset(),
-			curCSSTop = jQuery.css( elem, "top" ),
+			curCSSTop = jQuery.css( elem, "y" ),
 			curCSSLeft = jQuery.css( elem, "left" ),
 			calculatePosition = ( position === "absolute" || position === "fixed" ) && jQuery.inArray("auto", [curCSSTop, curCSSLeft]) > -1,
 			props = {}, curPosition = {}, curTop, curLeft;
@@ -9100,7 +9100,7 @@ jQuery.offset = {
 		// need to be able to calculate position if either top or left is auto and position is either absolute or fixed
 		if ( calculatePosition ) {
 			curPosition = curElem.position();
-			curTop = curPosition.top;
+			curTop = curPosition.y;
 			curLeft = curPosition.left;
 		} else {
 			curTop = parseFloat( curCSSTop ) || 0;
@@ -9111,8 +9111,8 @@ jQuery.offset = {
 			options = options.call( elem, i, curOffset );
 		}
 
-		if ( options.top != null ) {
-			props.top = ( options.top - curOffset.top ) + curTop;
+		if ( options.y != null ) {
+			props.y = ( options.y - curOffset.y ) + curTop;
 		}
 		if ( options.left != null ) {
 			props.left = ( options.left - curOffset.left ) + curLeft;
@@ -9141,21 +9141,21 @@ jQuery.fn.extend({
 
 		// Get correct offsets
 		offset       = this.offset(),
-		parentOffset = rroot.test(offsetParent[0].nodeName) ? { top: 0, left: 0 } : offsetParent.offset();
+		parentOffset = rroot.test(offsetParent[0].nodeName) ? { y: 0, left: 0 } : offsetParent.offset();
 
 		// Subtract element margins
 		// note: when an element has margin: auto the offsetLeft and marginLeft
 		// are the same in Safari causing offset.left to incorrectly be 0
-		offset.top  -= parseFloat( jQuery.css(elem, "marginTop") ) || 0;
+		offset.y  -= parseFloat( jQuery.css(elem, "marginTop") ) || 0;
 		offset.left -= parseFloat( jQuery.css(elem, "marginLeft") ) || 0;
 
 		// Add offsetParent borders
-		parentOffset.top  += parseFloat( jQuery.css(offsetParent[0], "borderTopWidth") ) || 0;
+		parentOffset.y  += parseFloat( jQuery.css(offsetParent[0], "borderTopWidth") ) || 0;
 		parentOffset.left += parseFloat( jQuery.css(offsetParent[0], "borderLeftWidth") ) || 0;
 
 		// Subtract the two offsets
 		return {
-			top:  offset.top  - parentOffset.top,
+			y:  offset.y  - parentOffset.y,
 			left: offset.left - parentOffset.left
 		};
 	},
