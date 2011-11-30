@@ -1,17 +1,21 @@
 var inflowConfig = {
-    // size of canvas
+   // size of canvas
     "width": 500,
     "height": 500,
 
-    // buckets are sources and sinks for material flow
-    "bucketWidth": 150,
-    "bucketSpacing":0,
+    // taps are sources and sinks for material flow
+    "tapLeft":0,
+    "tapWidth": 150,
+    "tapSpacing":0,
 
-    // data bin sizes
-    "dataLeft": 100,
-    "dataWidth": 20,
+    "sinkLeft":350,
+    "sinkWidth":150,
+    "sinkSpacing":0,
 
-    "entryX": 300,
+    // bezier offset in between  of taps.   0 means straight lines
+    "bezierOffset": 30,
+
+    "sinkCaptionProperty":"title",
 
     "taps" : [
         {

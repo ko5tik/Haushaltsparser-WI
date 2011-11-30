@@ -1,6 +1,5 @@
 var renderFlow = function(config, flowData) {
 
-    const bezierOffset = 50;
     var r = Raphael("chart", config.width, config.height);
 
     var taps = [];
@@ -14,9 +13,10 @@ var renderFlow = function(config, flowData) {
             "attr": tap.attr,
             "value": 0,
             "connectors": [] ,
+
+            "x":config.tapLeft,
             "y":0,
-            "x":0,
-            "w":config.bucketWidth,
+            "w":config.tapWidth,
             "h":0
         });
     });
@@ -29,13 +29,14 @@ var renderFlow = function(config, flowData) {
     $.each(flowData, function(idx, value) {
         //  populate sink,  copy all the interesting properties
         var sink = {
-            "title": value.title,
+            "title": value[config.sinkCaptionProperty],
             "attr":value.attr,
             "value": 0,
             "connectors":[],
+
+            "x":config.sinkLeft,
             "y":0,
-            "x":0,
-            "w":config.bucketWidth + config.bucketSpacing,
+            "w":config.sinkWidth,
             "h":0
         };
 
@@ -44,6 +45,8 @@ var renderFlow = function(config, flowData) {
         $.each(taps, function(idx, tap) {
             //  entry has something for this bin?
             if (value[tap.out]) {
+                // extract vata value
+                var dataValue = value[tap.out];
                 // connector
                 var connector = {
                     "value": dataValue,
@@ -53,8 +56,6 @@ var renderFlow = function(config, flowData) {
                     "sinkOffset":sink.value
                 };
 
-
-                var dataValue = value[tap.out];
 
                 tap.value += dataValue;
                 sink.value += dataValue;
@@ -86,69 +87,74 @@ var renderFlow = function(config, flowData) {
             top = top + tap.h;
 
             tap.rect = r.rect(tap.x, tap.y, tap.w, tap.h).attr(tap.attr);
-            tap.caption = r.text(tap.x + tap.w / 2, tap.y + tap.h / 2, tap.title + " (" + tap.value + ")" ).attr(tap.textAttr);
+            tap.caption = r.text(tap.x + tap.w / 2, tap.y + tap.h / 2, tap.title + " (" + tap.value + ")").attr(tap.textAttr);
 
         }
     });
-    /*
-     //draw positions
-     top = 0;
 
-     $.each(flowData, function(idx, entry) {
-     entry.top = top;
-     entry.height = entry.total * scaleFactor;
-     top = top + entry.height + config.bucketSpacing;
-     drawRectWithCaption(r, entry.title + " (" + entry.total + ")", config.entryX, entry.top, config.bucketWidth, entry.height);
-     });
+    top = 0;
 
-     */
-    /*
-     // draw connections, iterate over taps  and draw connecting lines
-     $.each(config.taps, function(idx, tap) {
-     // where to start on tap side
-     var tapFrom = tap.top;
-     tap.connectors = [];
-     $.each(flowData, function(idx, entry) {
-     // dow we have to process this entry at all?
-     if (entry[tap.out]) {
-     // where to end on line side
-     var entryFrom = entry.from || 0;
-     // how many pixels wide?
-     var width = entry[tap.out] * scaleFactor;
+    // draw sinks computing offsets in process
+    $.each(sinks, function(idx, sink) {
+        if (sink.value > 0) {
+            sink.y = top;
+
+            sink.h = sink.value * scaleFactor;
+            top = top += sink.h;
+
+            sink.rect = r.rect(sink.x, sink.y, sink.w, sink.h).attr(sink.attr);
+            sink.caption = r.text(sink.x + sink.w / 2, sink.y + sink.h / 2, sink.title + " (" + sink.value + ")").attr(sink.textAttr);
+        }
+    });
 
 
-     // draw bezier line
+    // and now draw connectors
+    $.each(taps, function(idx, tap) {
 
-     var path = [
-     // move to start
-     "M" , config.bucketWidth ,tapFrom ,
-     // bezier to sink
-     "C" ,config.bucketWidth + bezierOffset  ,tapFrom ,  config.entryX - bezierOffset , entry.top + entryFrom,  config.entryX , entry.top + entryFrom,
-     // move down
-     "l" , 0, width,
-     // move back bezier
-     "C" ,  config.entryX - bezierOffset, entry.top + entryFrom + width , config.bucketWidth + bezierOffset  ,tapFrom + width , config.bucketWidth , tapFrom + width,
-     "Z"
-     ].join(" ");
+        $.each(tap.connectors, function(idx, connector) {
+            var sink = connector.sink;
+            // connectors are bezier splines
+            var connectorLeft = tap.x + tap.w;
+            var connectorRight = sink.x;
 
-     var connector = r.path(path).attr(tap.attr);
+            var connectorWidth = connector.value * scaleFactor;
 
-     var bbox = connector.getBBox();
+            var connectorTapFrom = tap.y + connector.tapOffset * scaleFactor;
+            var connectorSinkFrom = sink.y + connector.sinkOffset * scaleFactor;
 
-     r.text(bbox.x + bbox.width / 2, bbox.y + bbox.height / 2, "" + entry[tap.out]);
+            var connectorSinkTo = connectorSinkFrom + connectorWidth;
+            var connectorTapTo = connectorTapFrom + connectorWidth;
+            var path = [
+                // start point
+                "M" ,
+                connectorLeft , connectorTapFrom ,
+                // bezier curve
+                "C" ,
+                // control point left
+                connectorLeft + config.bezierOffset , connectorTapFrom,
+                // control point right
+                connectorRight - config.bezierOffset , connectorSinkFrom,
+                // desctination point
+                connectorRight , connectorSinkFrom,
+                // line down
+                "L" ,connectorRight , connectorSinkTo,
+                // bezier back
+                "C",
+                // control point right
+                connectorRight - config.bezierOffset , connectorSinkTo,
+                // control point left
+                connectorLeft + config.bezierOffset , connectorTapTo,
+                // destination point
+                connectorLeft ,  connectorTapTo,
+                // close it
+                "Z"
+            ].join(" ");
 
-     tap.connectors.push(connector);
+            connector.path = r.path(path).attr(tap.attr);
 
+            var bbox = connector.path.getBBox();
 
-     // step counters
-     tapFrom += width;
-     entryFrom += width;
-     entry.from = entryFrom;
-     }
-     })
-     });
-
-     */
-
-
+            r.text(bbox.x + bbox.width / 2, bbox.y + bbox.height / 2, "" + connector.value);
+        });
+    });
 };
