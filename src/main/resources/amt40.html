@@ -22,30 +22,39 @@
         var spending = {};
 
         $.each(amt40, function(idx, position) {
-            var key = position.title + ", " + position.kostenstelle;
+            var kstNumber = parseInt(position.kostenstelle);
+            if (kstNumber >= 1300076 && kstNumber <= 1300231) {
+                var key = position.title + ", " + position.kostenstelle;
 
 
-            if (!spending[key]) {
-                spending[key] = {};
-                spending[key].title = key;
+                if (!spending[key]) {
+                    spending[key] = {};
+                    spending[key].title = key;
+                }
+
+                spending[key][position.position] = position.value;
             }
-
-
-            spending[key][position.position] = position.value;
         });
+
 
         var inflowConfig = {
             // size of canvas
-            "width": 1000,
+            "width": 1200,
             "height": 10000,
 
-            // buckets are sources and sinks for material flow
-            "bucketWidth": 400,
-            "bucketSpacing":0,
 
+            // taps are sources and sinks for material flow
+            "tapLeft":0,
+            "tapWidth": 150,
+            "tapSpacing":0,
 
+            "sinkLeft":850,
+            "sinkWidth":150,
+            "sinkSpacing":0,
 
-            "entryX": 600,
+            "bezierOffset": 30,
+
+            "sinkCaptionProperty":"title",
 
             "taps" : [
                 {
@@ -64,7 +73,7 @@
                     "attr": { fill: "#0f0" , stroke: "#000", "stroke-width": 1,"fill-opacity":0.6, "stroke-opacity":0.9}
 
 
-                }/* ,
+                },
                 {
                     "caption": "Personalaufwendungen",
                     // data flowing out
@@ -72,15 +81,14 @@
                     "attr": { fill: "#00f" , stroke: "#000", "stroke-width": 1,"fill-opacity":0.6, "stroke-opacity":0.9}
 
 
-                } ,
-                {
-                    "caption": "Versorgungsaufwendungen",
-                    // data flowing out
-                    "out":"Versorgungsaufwendungen" ,
-                    "attr": { fill: "#f0f" , stroke: "#000", "stroke-width": 1,"fill-opacity":0.6, "stroke-opacity":0.9}
+                }/* ,
+                 {
+                 "caption": "Versorgungsaufwendungen",
+                 // data flowing out
+                 "out":"Versorgungsaufwendungen" ,
+                 "attr": { fill: "#f0f" , stroke: "#000", "stroke-width": 1,"fill-opacity":0.6, "stroke-opacity":0.9}
 
-
-                } */
+                 }    */
             ]
         };
 
@@ -88,6 +96,7 @@
         $(function () {
             renderFlow(inflowConfig, spending)
         });
+
 
     </script>
 </head>
