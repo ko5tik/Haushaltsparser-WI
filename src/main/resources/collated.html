@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>collated results</title>
+    <script src="./raphael.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./jquery-1.7.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./inflow_code.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./amt40.js" type="text/javascript" charset="utf-8"></script>
+    <style>
+        #chart {
+            width: 1200px;
+            height: 1000px;
+        }
+    </style>
+    <script>
+        var unrelated = { "title": "Schulbetrieb"};
+        var building = { "title": "Gebäude"};
+        var machines = { "title": "Maschinen und Fahrzeuge"};
+        var other = { "title": "Andere Ausgaben"};
+        var construction ={"title": "Bau und Beschaffung" }  ;
+        var central ={"title": "Zentrale Dienste" }  ;
+        var spending = [ unrelated , machines, building , construction, central,   other];
+        // collate
+        $.each(amt40, function(idx, position) {
+            var kstNumber = parseInt(position.kostenstelle);
+            // schulen
+            if ((kstNumber >= 1300076 && kstNumber <= 1300231) || (kstNumber >= 1300005 &&  kstNumber <= 1300009)) {
+
+                pos = unrelated[position.position] || 0;
+                unrelated[position.position] = pos + position.value;
+            } else if (kstNumber >= 15000004 && kstNumber <= 15000417) {
+                // gebäude
+                pos = building[position.position] || 0;
+                building[position.position] = pos + position.value
+            } else if (kstNumber >= 16000002) {
+                // gebäude
+                pos = machines[position.position] || 0;
+                machines[position.position] = pos + position.value
+            } else if(kstNumber == 1300018) {
+               // gebäude
+                pos = construction[position.position] || 0;
+                construction[position.position] = pos + position.value
+            } else if(kstNumber == 1100008) {
+               // gebäude
+                pos = central[position.position] || 0;
+                central[position.position] = pos + position.value
+            } else {
+                pos = other[position.position] || 0;
+                other[position.position] = pos + position.value
+            }
+
+
+        });
+
+
+        var inflowConfig = {
+            // size of canvas
+            "width": 1200,
+            "height": 1000,
+
+
+            // taps are sources and sinks for material flow
+            "tapLeft":0,
+            "tapWidth": 200,
+            "tapSpacing":0,
+
+            "sinkLeft":800,
+            "sinkWidth":200,
+            "sinkSpacing":0,
+
+            "bezierOffset": 30,
+
+            "sinkCaptionProperty":"title",
+
+            "taps" : [
+                {
+                    "caption": "Aufwendungen für Sach- und Dienstleistungen",
+                    // data flowing out
+                    "out":"Aufwendungen f. Sach- und Dienstleistg." ,
+                    "attr": { fill: "#f00" , stroke: "#000", "stroke-width": 1,"fill-opacity":0.6, "stroke-opacity":0.9}
+
+
+                },
+
+                {
+                    "caption": "Abschreibungen",
+                    // data flowing out
+                    "out":"Abschreibungen" ,
+                    "attr": { fill: "#0f0" , stroke: "#000", "stroke-width": 1,"fill-opacity":0.6, "stroke-opacity":0.9}
+
+
+                },
+                {
+                    "caption": "Personalaufwendungen",
+                    // data flowing out
+                    "out":"Personalaufwendungen" ,
+                    "attr": { fill: "#00f" , stroke: "#000", "stroke-width": 1,"fill-opacity":0.6, "stroke-opacity":0.9}
+
+
+                } ,
+                {
+                    "caption": "Versorgungsaufwendungen",
+                    // data flowing out
+                    "out":"Versorgungsaufwendungen" ,
+                    "attr": { fill: "#f0f" , stroke: "#000", "stroke-width": 1,"fill-opacity":0.6, "stroke-opacity":0.9}
+
+                }
+            ]
+        };
+
+
+        $(function () {
+            renderFlow(inflowConfig, spending)
+        });
+
+    </script>
+</head>
+<body>
+
+<div id="chart">
+
+</div>
+</body>
+</html>
