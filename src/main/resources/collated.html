@@ -14,41 +14,67 @@
         }
     </style>
     <script>
-        var unrelated = { "title": "Schulbetrieb"};
-        var building = { "title": "Gebäude"};
-        var machines = { "title": "Maschinen und Fahrzeuge"};
-        var other = { "title": "Andere Ausgaben"};
-        var construction ={"title": "Bau und Beschaffung" }  ;
-        var central ={"title": "Zentrale Dienste" }  ;
-        var spending = [ unrelated , machines, building , construction, central,   other];
+       var taps = [
+            {
+                "title": "Maschinen und Fahrzeuge"  ,
+                "accept": function(kostenstelle) {
+                    return  (kostenstelle >= 16000002)
+                }
+            },
+            {
+                "title": "Zentrale Dienste" ,
+                "accept": function(kostenstelle) {
+                    return  (kostenstelle == 1100008)
+                }
+            },
+            {
+                "title": "Schulbetrieb" ,
+                "accept": function(kostenstelle) {
+                    return  (kostenstelle >= 1300076 && kostenstelle <= 1300231) || (kostenstelle >= 1300005 && kostenstelle <= 1300009)
+                }
+            } ,
+
+            {
+                "title": "Bau und Beschaffung",
+                "accept": function(kostenstelle) {
+                    return  (kostenstelle == 1300018)
+                }
+            },
+            {
+                "title": "GebÃ¤ude"   ,
+                "accept": function(kostenstelle) {
+                    return  (kostenstelle >= 15000004 && kostenstelle <= 15000417)
+                }
+            } ,
+
+            {
+                "title" : "Sekretariate und techn. Personal",
+                "accept": function(kostenstelle) {
+                    return  (kostenstelle == 1300003)
+                }
+            }  ,
+
+            {
+                "title": "Andere Ausgaben",
+                "accept": function(kostenstelle) {
+                    return true;
+                }
+            }
+        ];
+
         // collate
         $.each(amt40, function(idx, position) {
             var kstNumber = parseInt(position.kostenstelle);
-            // schulen
-            if ((kstNumber >= 1300076 && kstNumber <= 1300231) || (kstNumber >= 1300005 &&  kstNumber <= 1300009)) {
 
-                pos = unrelated[position.position] || 0;
-                unrelated[position.position] = pos + position.value;
-            } else if (kstNumber >= 15000004 && kstNumber <= 15000417) {
-                // gebäude
-                pos = building[position.position] || 0;
-                building[position.position] = pos + position.value
-            } else if (kstNumber >= 16000002) {
-                // gebäude
-                pos = machines[position.position] || 0;
-                machines[position.position] = pos + position.value
-            } else if(kstNumber == 1300018) {
-               // gebäude
-                pos = construction[position.position] || 0;
-                construction[position.position] = pos + position.value
-            } else if(kstNumber == 1100008) {
-               // gebäude
-                pos = central[position.position] || 0;
-                central[position.position] = pos + position.value
-            } else {
-                pos = other[position.position] || 0;
-                other[position.position] = pos + position.value
-            }
+            $.each(taps, function(idx, tap) {
+                        if (tap.accept(kstNumber)) {
+                            pos = tap[position.position] || 0;
+                            tap[position.position] = pos + position.value;
+                            return false;
+                        }
+                        return true;
+                    }
+            );
 
 
         });
@@ -75,7 +101,7 @@
 
             "taps" : [
                 {
-                    "caption": "Aufwendungen für Sach- und Dienstleistungen",
+                    "caption": "Aufwendungen fï¿½r Sach- und Dienstleistungen",
                     // data flowing out
                     "out":"Aufwendungen f. Sach- und Dienstleistg." ,
                     "attr": { fill: "#f00" , stroke: "#000", "stroke-width": 1,"fill-opacity":0.6, "stroke-opacity":0.9}
