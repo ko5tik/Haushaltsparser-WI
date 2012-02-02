@@ -79,14 +79,35 @@ public class DataParser {
         }
     }
 
-    public static List<String> splitPosition(String positionSpring) {
+    public static List<String> splitPosition(String positionString) {
         List<String> parts = new ArrayList<String>();
 
-        parts.add(positionSpring.substring(15, 59).trim());
-        parts.add(positionSpring.substring(60, 73).trim());
-        parts.add(positionSpring.substring(74, 87).trim());
-        parts.add(positionSpring.substring(88, 101).trim());
-        parts.add(positionSpring.substring(102, positionSpring.length()).trim());
+        parts.add(positionString.substring(15, 59).trim());
+        parts.add(positionString.substring(60, 73).trim());
+        parts.add(positionString.substring(74, 87).trim());
+        parts.add(positionString.substring(88, 101).trim());
+        parts.add(positionString.substring(102, positionString.length()).trim());
         return parts;
+    }
+
+    /**
+     * extract designator and year parts
+     * @param positionString
+     * @return
+     */
+    public static List<String[]> splitDesignators(String positionString) {
+
+        List<String[]> parts = new ArrayList<String[]>();
+        parts.add(splitDesignatorAndYear(positionString.substring(58, 73).trim()));
+        parts.add(splitDesignatorAndYear(positionString.substring(74, 88).trim()));
+        parts.add(splitDesignatorAndYear(positionString.substring(89, 101).trim()));
+        parts.add(splitDesignatorAndYear(positionString.substring(102,positionString.length()).trim()));
+
+        return parts;
+    }
+
+    private static String[] splitDesignatorAndYear(String positionString) {
+        final int lastSpace = positionString.lastIndexOf(" ");
+        return new String[]{positionString.substring(0, lastSpace), positionString.substring(lastSpace+1)};
     }
 }

@@ -112,6 +112,7 @@ public class DataParserTest {
     public void testParsingWithDots() {
         assertEquals(new Integer(123239), DataParser.processNumber("123.239"));
     }
+
     /**
      * shall split  and deliver position parts based on  defined field borders
 
@@ -122,10 +123,36 @@ public class DataParserTest {
         final List<String> strings = DataParser.splitPosition(toParse.split("\n")[20]);
         assertEquals(5, strings.size());
 
-        assertEquals("Aufwendungen f. Sach- und Dienstleistg.", strings.get(0));
+      assertEquals("Aufwendungen f. Sach- und Dienstleistg.", strings.get(0));
         assertEquals("9.676", strings.get(1));
         assertEquals("9.673", strings.get(2));
         assertEquals("10.021", strings.get(3));
         assertEquals("8.917", strings.get(4));
     }
+
+
+    /**
+     * shall produce list of pairs of year and designator from first  table string
+     */
+    @Test
+    public void testTagAndYearParsing() {
+        final List<String[]> strings = DataParser.splitDesignators(toParse.split("\n")[4]);
+
+        assertEquals(4,strings.size());
+        
+        assertEquals("HH Ansatz",strings.get(0)[0]);
+        assertEquals("2011",strings.get(0)[1]);
+
+
+        assertEquals("HH Ansatz",strings.get(1)[0]);
+        assertEquals("2010",strings.get(1)[1]);
+
+        assertEquals("HH Ansatz",strings.get(2)[0]);
+        assertEquals("09",strings.get(2)[1]);
+
+        assertEquals("Ergebnis",strings.get(3)[0]);
+        assertEquals("2008",strings.get(3)[1]);
+
+    }
+
 }
