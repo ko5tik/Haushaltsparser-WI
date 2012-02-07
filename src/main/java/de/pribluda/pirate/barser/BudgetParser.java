@@ -11,7 +11,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
-import de.pribluda.pirate.barser.beans.Dezernat;
+import de.pribluda.pirate.barser.beans.Entity;
 import de.pribluda.pirate.barser.beans.Kostenstelle;
 import de.pribluda.pirate.barser.beans.Position;
 
@@ -85,17 +85,17 @@ public class BudgetParser {
 
 
         int lineIndex = 0;
-        Dezernat dezernat = null;
+        Entity entity = null;
 
         // extract organisational entity
         for (; lineIndex < lines.length; lineIndex++) {
-            dezernat = DataParser.parseAmt(lines[lineIndex]);
-            if (dezernat != null)
+            entity = DataParser.parseAmt(lines[lineIndex]);
+            if (entity != null)
                 break;
         }
 
 
-        System.out.println("dezernat:" + dezernat);
+        System.out.println("entity:" + entity);
 
         // parse until we get proper kostenstelle
         // extract organisational entity
@@ -116,7 +116,7 @@ public class BudgetParser {
         }
 
         Map basicDBObject = new HashMap();
-        basicDBObject.put("dezernat", dezernat.getName());
+        basicDBObject.put("entity", entity.getName());
         basicDBObject.put("amt", kostenstelle.getAmt());
         basicDBObject.put("kostenstelle", kostenstelle.getName());
         basicDBObject.put("title", kostenstelle.getTitle());

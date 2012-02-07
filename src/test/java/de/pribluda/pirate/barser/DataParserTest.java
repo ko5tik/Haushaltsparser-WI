@@ -17,7 +17,8 @@ import static org.junit.Assert.assertNull;
  * @author e078262 ( Konstantin Pribluda )
  */
 public class DataParserTest {
-    static final String toParse = " Organisationseinheit:                        Dezernat VIII\n" +
+    static final String toParse =
+            " Organisationseinheit:                        Entity VIII\n" +
             "      Kostenstelle/Kostenstellengruppe:            1300112          40 Budget Riederbergschule\n" +
             "                                                   Teilergebnishaushalt\n" +
             "                                                        - EURO -\n" +
@@ -115,7 +116,6 @@ public class DataParserTest {
 
     /**
      * shall split  and deliver position parts based on  defined field borders
-
      */
     @Test
     public void testPositionSplit() {
@@ -154,5 +154,6 @@ public class DataParserTest {
         assertEquals("2008",strings.get(3)[1]);
 
     }
+
 
 }

@@ -9,7 +9,7 @@ package de.pribluda.pirate.barser.beans;
  *
  * @author Konstantin Pribluda
  */
-public class Dezernat {
+public class Entity {
 
 
     String name;
@@ -25,7 +25,7 @@ public class Dezernat {
 
     @Override
     public String toString() {
-        return "Dezernat{" +
+        return "Entity{" +
                 "name='" + name + '\'' +
                 '}';
     }
