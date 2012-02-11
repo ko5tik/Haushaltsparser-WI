@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * process supplied budget file and save data into mongo
@@ -62,11 +63,13 @@ public class FileParser extends AbstractFileParser {
         final Map<String, String> subentityMap = DataParser.extractSubentity(lines[1]);
 
 
-        // skip till field declaration
+        // skip till field declaration , and extract field values
+        int[][] valueLocations = null;
         int lineNum = 1;
         for (; lineNum < lines.length; lineNum++) {
-            System.out.println(lines[lineNum]);
             if (lines[lineNum].trim().startsWith("Position")) {
+                System.err.println(lines[lineNum]);
+                valueLocations = extractValueLocations(lines[lineNum]);
                 break;
             }
         }
@@ -75,19 +78,35 @@ public class FileParser extends AbstractFileParser {
         // process single lines
         lineNum++;
         for (; lineNum < lines.length; lineNum++) {
-            System.err.println(lines[lineNum]);
-            final List<Map<String, Object>> positions = extractPositions(lines[lineNum]);
-            System.err.println("processed:" + positions);
+
+            final List<Map<String, Object>> positions = extractPositions(lines[lineNum], valueLocations);
+            if (positions != null) {
+                // save to database
+            } else {
+                System.err.println("unable to process:" + lines[lineNum]);
+            }
         }
 
 
     }
 
+    static Pattern[] titles = {
+            Pattern.compile("HH Ansatz\\s+2013"),
+            Pattern.compile("HH Ansatz\\s+2012"),
+            Pattern.compile("HH Ansatz\\s+2011"),
+            Pattern.compile("Ergebnis\\s+2010")};
+
     @Override
-    List<Map<String, Object>> extractPositions(String positionString) {
+    public Pattern[] valueTitles() {
+        return titles;
+    }
+
+    @Override
+    List<Map<String, Object>> extractPositions(String positionString, int[][] valueLocations) {
 
         if (positionString.length() < 56)
             return null;
+
         List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
 
         Map<String, Object> template = new HashMap<String, Object>();
@@ -95,25 +114,25 @@ public class FileParser extends AbstractFileParser {
         template.put("posDescription", positionString.substring(7, 56).trim());
 
 
-        HashMap<String, Object> position = extractValue(positionString, 2013, "Ansatz", 56, 73);
+        HashMap<String, Object> position = extractValue(positionString, 2013, "Ansatz", valueLocations[0][0], valueLocations[0][1]);
         if (position != null) {
             position.putAll(template);
             result.add(position);
         }
 
-        position = extractValue(positionString, 2012, "Ansatz", 73, 87);
+        position = extractValue(positionString, 2012, "Ansatz", valueLocations[1][0], valueLocations[1][1]);
         if (position != null) {
             position.putAll(template);
             result.add(position);
         }
 
-        position = extractValue(positionString, 2011, "Ansatz", 87, 102);
+        position = extractValue(positionString, 2011, "Ansatz", valueLocations[2][0], valueLocations[2][1]);
         if (position != null) {
             position.putAll(template);
             result.add(position);
         }
-
-        position = extractValue(positionString, 2010, "Ergebnis", 102, positionString.length());
+        // lst segment maz be shorter
+        position = extractValue(positionString, 2010, "Ergebnis", valueLocations[3][0], positionString.length());
         if (position != null) {
             position.putAll(template);
             result.add(position);
@@ -123,52 +142,6 @@ public class FileParser extends AbstractFileParser {
         return result;
     }
 
-    private HashMap<String, Object> extractValue(String positionString, int year, String qualifier, int beginIndex, int endIndex) {
-        if ( positionString.length() < endIndex)
-            return null;
-
-        final HashMap<String, Object> position = new HashMap<String, Object>();
-
-        final String substring = positionString.substring(beginIndex, endIndex);
-        System.err.println("extracted value:" + substring);
-        final Integer value = DataParser.processNumber(substring);
-        System.err.println("int value:" + value);
-        if (value == null)
-            return null;
-
-        position.put("year", year);
-        position.put("qualifier", qualifier);
-        position.put("value", value);
-        return position;
-    }
-
-    @Override
-    List<Map<String, String>> extractDesignators(String position) {
-        return null;
-    }
-
-
-    void processEntity(int page, String[] lines) {
-
-        final Map<String, String> stringStringMap = DataParser.extractEntityData(lines[0]);
-
-        // skip till field declaration
-        int lineNum = 1;
-        for (; lineNum < lines.length; lineNum++) {
-            System.out.println(lines[lineNum]);
-            if (lines[lineNum].trim().startsWith("Position")) {
-                break;
-            }
-        }
-
-
-        // process single lines
-        lineNum++;
-        for (; lineNum < lines.length; lineNum++) {
-            final List<Map<String, String>> designators = extractDesignators(lines[lineNum]);
-            final List<Map<String, Object>> positions = extractPositions(lines[lineNum]);
-        }
-    }
 
     public static AbstractFileParser createInstance() {
         return new FileParser();

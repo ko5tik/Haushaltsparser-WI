@@ -138,7 +138,7 @@ public class DataParser {
         if (number == null) {
             return null;
         }
-        final String preprocessed = number.trim().replaceAll("\\.", "");
+        final String preprocessed = number.trim().replaceAll("\\.", "").replaceAll(",.*$","");
         try {
             if (preprocessed.endsWith("-")) {
                 return Integer.parseInt(preprocessed.substring(0, preprocessed.length() - 1)) * -1;

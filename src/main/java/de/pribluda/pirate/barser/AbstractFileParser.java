@@ -4,8 +4,11 @@ import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfReaderContentParser;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * abstract base file parser class providing PDF file traversal.  instance shall be created by subclasses
@@ -27,17 +30,12 @@ public abstract class AbstractFileParser {
 
     /**
      * extract individual positions.
-     * @param position position string
+     *
+     * @param positionString
+     * @param valueLocations
      * @return
      */
-   abstract List<Map<String,Object>> extractPositions(String position);
-
-    /**
-     * extract
-     * @param position position string
-     * @return
-     */
-    abstract List<Map<String,String>> extractDesignators(String position);
+   abstract List<Map<String,Object>> extractPositions(String positionString, int[][] valueLocations);
 
 
     protected void processFile(PdfReader pdfReader) throws IOException {
@@ -54,4 +52,42 @@ public abstract class AbstractFileParser {
         }
 
     }
+
+    protected HashMap<String, Object> extractValue(String positionString, int year, String qualifier, int beginIndex, int endIndex) {
+        //System.err.println("extracting from " + beginIndex + " to" + endIndex + " of " + positionString.length());
+        if (positionString.length() < endIndex || beginIndex >= endIndex)
+            return null;
+
+        final HashMap<String, Object> position = new HashMap<String, Object>();
+
+        final String substring = positionString.substring(beginIndex, endIndex);
+        //System.err.println("extracted value:" + substring);
+        final Integer value = DataParser.processNumber(substring);
+        //System.err.println("int value:" + value);
+        if (value == null)
+            return null;
+
+        position.put("year", year);
+        position.put("qualifier", qualifier);
+        position.put("value", value);
+        return position;
+    }
+
+    public int[][] extractValueLocations(String header) {
+        final Pattern[] titles = valueTitles();
+        final int[][] positions = new int[titles.length][2];
+        for (int i = 0; i < titles.length; i++) {
+
+            final Matcher matcher = titles[i].matcher(header);
+            if (matcher.find()) {
+                positions[i][0] = matcher.start();
+                positions[i][1] = matcher.end();
+               // System.err.println(titles[i] + ":" + positions[i][0] + " / " + positions[i][1]);
+            }
+        }
+
+        return positions;
+    }
+
+    public abstract Pattern[] valueTitles();
 }
