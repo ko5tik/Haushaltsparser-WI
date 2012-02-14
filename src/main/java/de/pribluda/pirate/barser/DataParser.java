@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class DataParser {
     public static final String ORGANISATIONSEINHEIT = "Organisation";
-    public static final String KOSTENSSTELLENPREFIX = "lostens";
+    public static final String KOSTENSSTELLENPREFIX = "kostens";
     public static final String PRODUCTPREFIX = "produkt";
     public static final String ENTITY = "Entity";
     public static final String PRODUCT_ID = "productId";
@@ -138,7 +138,7 @@ public class DataParser {
         if (number == null) {
             return null;
         }
-        final String preprocessed = number.trim().replaceAll("\\.", "").replaceAll(",.*$","");
+        final String preprocessed = number.trim().replaceAll("\\.", "").replaceAll(",\\d\\d", "");
         try {
             if (preprocessed.endsWith("-")) {
                 return Integer.parseInt(preprocessed.substring(0, preprocessed.length() - 1)) * -1;
@@ -146,6 +146,9 @@ public class DataParser {
                 return Integer.parseInt(preprocessed);
             }
         } catch (NumberFormatException e) {
+            if (preprocessed.length() > 0) {
+                System.err.println("parse failure:" + preprocessed);
+            }
             return null;
         }
     }

@@ -156,4 +156,11 @@ public class DataParserTest {
     }
 
 
+    @Test
+    public void testFractionIsSupressedAlsoForNegatives() {
+
+        assertEquals(new Integer(-161575) ,DataParser.processNumber("161.575,03-"));
+        assertEquals(new Integer(161575) ,DataParser.processNumber("161.575,03"));
+    }
+
 }
