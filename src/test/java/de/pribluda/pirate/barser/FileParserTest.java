@@ -42,4 +42,13 @@ public class FileParserTest {
         assertEquals(new Integer(-12982519), positions.get(2).get(AbstractFileParser.VALUE_TAG));
         assertEquals(2010, positions.get(2).get(AbstractFileParser.YEAR));
     }
+
+
+    @Test
+    public void testTitleExtraction() {
+        String values = "     1 privatrechtliche Leistungsentgelte                     12.368.143-    12.460.103-    12.404.380- 12.982.519,74-";
+        final String title = AbstractFileParser.extractPositionName(values);
+
+        assertEquals("privatrechtliche Leistungsentgelte",title);
+    }
 }

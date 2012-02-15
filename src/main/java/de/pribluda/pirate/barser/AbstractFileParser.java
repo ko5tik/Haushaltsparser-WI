@@ -10,6 +10,8 @@ import com.mongodb.Mongo;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -29,6 +31,9 @@ public abstract class AbstractFileParser {
     public static final String ANSATZ = "Ansatz";
     public static final String ERGEBNINS = "Ergebnins";
     public static final Pattern NUMBER_PATTERN = Pattern.compile("[0-9\\,\\.-]+");
+    public static final String SOURCE = "source";
+    // a-zA-ZäüößÄÜO\s
+    private static final Pattern titlePattern = Pattern.compile("[^0-9]++");
 
     public static DBCollection connectMongo() throws UnknownHostException {
         Mongo m = new Mongo();
@@ -85,9 +90,11 @@ public abstract class AbstractFileParser {
 
             final List<Map<String, Object>> positions = extractPositions(lines[lineNum], valueLocations);
             if (positions != null) {
+                final String title = extractPositionName(lines[lineNum]);               
                 // save to database
                 for (Map<String, Object> position : positions) {
                     position.putAll(entityMap);
+                    position.put("title", title);
                     if (subentityMap != null) {
                         position.putAll(subentityMap);
                     }
@@ -104,14 +111,65 @@ public abstract class AbstractFileParser {
     }
 
 
+    public static String extractPositionName(String source) {
+        final Matcher matcher = titlePattern.matcher(source);
+     matcher.find();
+       matcher.find();
+      //  System.err.println(matcher.start() + "/" + matcher.end());
+        return source.substring(matcher.start(), matcher.end()).trim();
+
+    }
+
     /**
-     * extract individual positions.
+     * extract positions out of supplied string
      *
      * @param positionString
      * @param valueLocations
      * @return
      */
-    abstract List<Map<String, Object>> extractPositions(String positionString, int[][] valueLocations);
+
+    List<Map<String, Object>> extractPositions(String positionString, int[][] valueLocations) {
+        //  System.err.println(positionString);
+        if (positionString.length() < 56)
+            return null;
+
+
+        List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+
+        final Matcher matcher = NUMBER_PATTERN.matcher(positionString);
+
+        matcher.region(56, positionString.length());
+
+
+        // iterate over value locations
+        boolean found = matcher.find();
+
+        for (int i = 0; i < valueLocations.length; i++) {
+            int[] location = valueLocations[i];
+            // do we have  match?
+            if (found) {
+                final int massCenter = (matcher.start() + matcher.end()) / 2;
+                if (massCenter >= location[0] && massCenter <= location[1]) {
+                    // mass center inside region, take it
+
+                    final Integer value = extractValue(positionString, matcher.start(), matcher.end());
+                    if (value != null) {
+                        Map<String, Object> position = new HashMap<String, Object>();
+                        position.putAll(valueTemplates()[i]);
+                        position.put(AbstractFileParser.VALUE_TAG, value);
+                        result.add(position);
+                    }
+                    // find next match if available
+                    found = matcher.find();
+                }
+            } else {
+                // nothing found, bail out
+                break;
+            }
+        }
+
+        return result;
+    }
 
 
     protected void processFile(PdfReader pdfReader, DBCollection coll) throws IOException {
@@ -133,12 +191,12 @@ public abstract class AbstractFileParser {
             return null;
 
         final String substring = positionString.substring(beginIndex, endIndex);
-     //   System.err.println("value: |" + substring + "|");
+        //   System.err.println("value: |" + substring + "|");
         //System.err.println("extracted value:" + substring);
         final Integer value = DataParser.processNumber(substring);
-     //   if (value == null) {
-     //       System.err.println("failed value: " + substring);
-     //   }
+        //   if (value == null) {
+        //       System.err.println("failed value: " + substring);
+        //   }
         return value;
     }
 
@@ -152,7 +210,7 @@ public abstract class AbstractFileParser {
             if (matcher.find()) {
                 positions[i][0] = matcher.start();
                 positions[i][1] = matcher.end();
-            //    System.err.println("from: " + positions[i][0] + " to: " + positions[i][1] + "|" + header.substring(positions[i][0], positions[i][1]) + "|");
+                //    System.err.println("from: " + positions[i][0] + " to: " + positions[i][1] + "|" + header.substring(positions[i][0], positions[i][1]) + "|");
             }
         }
 
