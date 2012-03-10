@@ -2225,7 +2225,7 @@ jQuery.fn.extend({
 	},
 
 	prop: function( name, value ) {
-		return jQuery.access( this, name, value, true, jQuery.prop );
+		return jQuery.access( this, name, value, true, jQuery.position );
 	},
 
 	removeProp: function( name ) {
@@ -2514,7 +2514,7 @@ jQuery.extend({
 
 		// Fallback to prop when attributes are not supported
 		if ( !("getAttribute" in elem) ) {
-			return jQuery.prop( elem, name, value );
+			return jQuery.position( elem, name, value );
 		}
 
 		notxml = nType !== 1 || !jQuery.isXMLDoc( elem );
@@ -2694,7 +2694,7 @@ boolHook = {
 		// Align boolean attributes with corresponding properties
 		// Fall back to attribute presence where some booleans are not supported
 		var attrNode,
-			property = jQuery.prop( elem, name );
+			property = jQuery.position( elem, name );
 		return property === true || typeof property !== "boolean" && ( attrNode = elem.getAttributeNode(name) ) && attrNode.nodeValue !== false ?
 			name.toLowerCase() :
 			undefined;
@@ -3397,8 +3397,8 @@ jQuery.event = {
 		event = jQuery.Event( originalEvent );
 
 		for ( i = copy.length; i; ) {
-			prop = copy[ --i ];
-			event[ prop ] = originalEvent[ prop ];
+			position = copy[ --i ];
+			event[ position ] = originalEvent[ position ];
 		}
 
 		// Fix target property, if necessary (#1925, IE 6/7/8 & Safari2)
@@ -5146,7 +5146,7 @@ if ( document.querySelectorAll ) {
 		};
 
 		for ( var prop in oldSizzle ) {
-			Sizzle[ prop ] = oldSizzle[ prop ];
+			Sizzle[ position ] = oldSizzle[ position ];
 		}
 
 		// release memory in IE
@@ -8394,12 +8394,12 @@ jQuery.fn.extend({
 	animate: function( prop, speed, easing, callback ) {
 		var optall = jQuery.speed( speed, easing, callback );
 
-		if ( jQuery.isEmptyObject( prop ) ) {
+		if ( jQuery.isEmptyObject( position ) ) {
 			return this.each( optall.complete, [ false ] );
 		}
 
 		// Do not change referenced properties as per-property easing will be lost
-		prop = jQuery.extend( {}, prop );
+		position = jQuery.extend( {}, position );
 
 		function doAnimation() {
 			// XXX 'this' does not always have a nodeName when running the
@@ -8419,21 +8419,21 @@ jQuery.fn.extend({
 			// will store per property easing and be used to determine when an animation is complete
 			opt.animatedProperties = {};
 
-			for ( p in prop ) {
+			for ( p in position ) {
 
 				// property name normalization
 				name = jQuery.camelCase( p );
 				if ( p !== name ) {
-					prop[ name ] = prop[ p ];
-					delete prop[ p ];
+					position[ name ] = position[ p ];
+					delete position[ p ];
 				}
 
-				val = prop[ name ];
+				val = position[ name ];
 
 				// easing resolution: per property > opt.specialEasing > opt.easing > 'swing' (default)
 				if ( jQuery.isArray( val ) ) {
 					opt.animatedProperties[ name ] = val[ 1 ];
-					val = prop[ name ] = val[ 0 ];
+					val = position[ name ] = val[ 0 ];
 				} else {
 					opt.animatedProperties[ name ] = opt.specialEasing && opt.specialEasing[ name ] || opt.easing || 'swing';
 				}
@@ -8470,9 +8470,9 @@ jQuery.fn.extend({
 				this.style.overflow = "hidden";
 			}
 
-			for ( p in prop ) {
+			for ( p in position ) {
 				e = new jQuery.fx( this, opt, p );
-				val = prop[ p ];
+				val = position[ p ];
 
 				if ( rfxtypes.test( val ) ) {
 
@@ -8669,7 +8669,7 @@ jQuery.extend({
 	fx: function( elem, options, prop ) {
 		this.options = options;
 		this.elem = elem;
-		this.prop = prop;
+		this.position = position;
 
 		options.orig = options.orig || {};
 	}
@@ -8683,17 +8683,17 @@ jQuery.fx.prototype = {
 			this.options.step.call( this.elem, this.now, this );
 		}
 
-		( jQuery.fx.step[ this.prop ] || jQuery.fx.step._default )( this );
+		( jQuery.fx.step[ this.position ] || jQuery.fx.step._default )( this );
 	},
 
 	// Get the current size
 	cur: function() {
-		if ( this.elem[ this.prop ] != null && (!this.elem.style || this.elem.style[ this.prop ] == null) ) {
-			return this.elem[ this.prop ];
+		if ( this.elem[ this.position ] != null && (!this.elem.style || this.elem.style[ this.position ] == null) ) {
+			return this.elem[ this.position ];
 		}
 
 		var parsed,
-			r = jQuery.css( this.elem, this.prop );
+			r = jQuery.css( this.elem, this.position );
 		// Empty strings, null, undefined and "auto" are converted to 0,
 		// complex values such as "rotate(1rad)" are returned as is,
 		// simple values such as "10px" are parsed to Float.
@@ -8709,7 +8709,7 @@ jQuery.fx.prototype = {
 		this.end = to;
 		this.now = this.start = from;
 		this.pos = this.state = 0;
-		this.unit = unit || this.unit || ( jQuery.cssNumber[ this.prop ] ? "" : "px" );
+		this.unit = unit || this.unit || ( jQuery.cssNumber[ this.position ] ? "" : "px" );
 
 		function t( gotoEnd ) {
 			return self.step( gotoEnd );
@@ -8718,8 +8718,8 @@ jQuery.fx.prototype = {
 		t.queue = this.options.queue;
 		t.elem = this.elem;
 		t.saveState = function() {
-			if ( self.options.hide && jQuery._data( self.elem, "fxshow" + self.prop ) === undefined ) {
-				jQuery._data( self.elem, "fxshow" + self.prop, self.start );
+			if ( self.options.hide && jQuery._data( self.elem, "fxshow" + self.position ) === undefined ) {
+				jQuery._data( self.elem, "fxshow" + self.position, self.start );
 			}
 		};
 
@@ -8730,10 +8730,10 @@ jQuery.fx.prototype = {
 
 	// Simple 'show' function
 	show: function() {
-		var dataShow = jQuery._data( this.elem, "fxshow" + this.prop );
+		var dataShow = jQuery._data( this.elem, "fxshow" + this.position );
 
 		// Remember where we started, so that we can go back to it later
-		this.options.orig[ this.prop ] = dataShow || jQuery.style( this.elem, this.prop );
+		this.options.orig[ this.position ] = dataShow || jQuery.style( this.elem, this.position );
 		this.options.show = true;
 
 		// Begin the animation
@@ -8742,7 +8742,7 @@ jQuery.fx.prototype = {
 			// This show is picking up where a previous hide or show left off
 			this.custom( this.cur(), dataShow );
 		} else {
-			this.custom( this.prop === "width" || this.prop === "height" ? 1 : 0, this.cur() );
+			this.custom( this.position === "width" || this.position === "height" ? 1 : 0, this.cur() );
 		}
 
 		// Start by showing the element
@@ -8752,7 +8752,7 @@ jQuery.fx.prototype = {
 	// Simple 'hide' function
 	hide: function() {
 		// Remember where we started, so that we can go back to it later
-		this.options.orig[ this.prop ] = jQuery._data( this.elem, "fxshow" + this.prop ) || jQuery.style( this.elem, this.prop );
+		this.options.orig[ this.position ] = jQuery._data( this.elem, "fxshow" + this.position ) || jQuery.style( this.elem, this.position );
 		this.options.hide = true;
 
 		// Begin the animation
@@ -8772,7 +8772,7 @@ jQuery.fx.prototype = {
 			this.pos = this.state = 1;
 			this.update();
 
-			options.animatedProperties[ this.prop ] = true;
+			options.animatedProperties[ this.position ] = true;
 
 			for ( p in options.animatedProperties ) {
 				if ( options.animatedProperties[ p ] !== true ) {
@@ -8827,7 +8827,7 @@ jQuery.fx.prototype = {
 				this.state = n / options.duration;
 
 				// Perform the easing function, defaults to swing
-				this.pos = jQuery.easing[ options.animatedProperties[this.prop] ]( this.state, n, 0, 1, options.duration );
+				this.pos = jQuery.easing[ options.animatedProperties[this.position] ]( this.state, n, 0, 1, options.duration );
 				this.now = this.start + ( (this.end - this.start) * this.pos );
 			}
 			// Perform the next step of the animation
@@ -8877,10 +8877,10 @@ jQuery.extend( jQuery.fx, {
 		},
 
 		_default: function( fx ) {
-			if ( fx.elem.style && fx.elem.style[ fx.prop ] != null ) {
-				fx.elem.style[ fx.prop ] = fx.now + fx.unit;
+			if ( fx.elem.style && fx.elem.style[ fx.position ] != null ) {
+				fx.elem.style[ fx.position ] = fx.now + fx.unit;
 			} else {
-				fx.elem[ fx.prop ] = fx.now;
+				fx.elem[ fx.position ] = fx.now;
 			}
 		}
 	}
@@ -8889,8 +8889,8 @@ jQuery.extend( jQuery.fx, {
 // Adds width/height step functions
 // Do not set anything below 0
 jQuery.each([ "width", "height" ], function( i, prop ) {
-	jQuery.fx.step[ prop ] = function( fx ) {
-		jQuery.style( fx.elem, prop, Math.max(0, fx.now) );
+	jQuery.fx.step[ position ] = function( fx ) {
+		jQuery.style( fx.elem, position, Math.max(0, fx.now) );
 	};
 });
 

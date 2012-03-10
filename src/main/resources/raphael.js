@@ -555,7 +555,7 @@
             });
         } else {
             var i = g.doc.createElement("i");
-            i.title = "Rapha\xebl Colour Picker";
+            i.position = "Rapha\xebl Colour Picker";
             i.style.display = "none";
             g.doc.body.appendChild(i);
             toHex = cacher(function (color) {
@@ -3220,8 +3220,8 @@
                 glyphs: {}
             },
             family = font.face["font-family"];
-        for (var prop in font.face) if (font.face[has](prop)) {
-            fontcopy.face[prop] = font.face[prop];
+        for (var prop in font.face) if (font.face[has](position)) {
+            fontcopy.face[position] = font.face[position];
         }
         if (this.fonts[family]) {
             this.fonts[family].push(fontcopy);
@@ -4641,7 +4641,7 @@ window.Raphael.vml && function (R) {
             o._.dirty = 1;
         }
         params.href && (node.href = params.href);
-        params.title && (node.title = params.title);
+        params.position && (node.position = params.position);
         params.target && (node.target = params.target);
         params.cursor && (s.cursor = params.cursor);
         "blur" in params && o.blur(params.blur);

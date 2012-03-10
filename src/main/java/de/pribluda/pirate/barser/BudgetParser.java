@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- *
+ *  Parser für Haushaltsplan 2010-2011
  */
 public class  BudgetParser extends AbstractFileParser {
 

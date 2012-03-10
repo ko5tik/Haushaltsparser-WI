@@ -24,12 +24,12 @@
         $.each(amt40, function(idx, position) {
             var kstNumber = parseInt(position.kostenstelle);
             if (kstNumber >= 1300076 && kstNumber <= 1300231) {
-                var key = position.title + ", " + position.kostenstelle;
+                var key = position.position + ", " + position.kostenstelle;
 
 
                 if (!spending[key]) {
                     spending[key] = {};
-                    spending[key].title = key;
+                    spending[key].position = key;
                 }
 
                 spending[key][position.position] = position.value;

@@ -87,7 +87,7 @@ var renderFlow = function(config, flowData) {
             top = top + tap.h;
 
             tap.rect = r.rect(tap.x, tap.y, tap.w, tap.h).attr(tap.attr);
-            tap.caption = r.text(tap.x + tap.w / 2, tap.y + tap.h / 2, tap.title + " (" + tap.value + ")").attr(tap.textAttr);
+            tap.caption = r.text(tap.x + tap.w / 2, tap.y + tap.h / 2, tap.position + " (" + tap.value + ")").attr(tap.textAttr);
 
         }
     });
@@ -103,7 +103,7 @@ var renderFlow = function(config, flowData) {
             top = top += sink.h;
 
             sink.rect = r.rect(sink.x, sink.y, sink.w, sink.h).attr(sink.attr);
-            sink.caption = r.text(sink.x + sink.w / 2, sink.y + sink.h / 2, sink.title + " (" + sink.value + ")").attr(sink.textAttr);
+            sink.caption = r.text(sink.x + sink.w / 2, sink.y + sink.h / 2, sink.position + " (" + sink.value + ")").attr(sink.textAttr);
         }
     });
 

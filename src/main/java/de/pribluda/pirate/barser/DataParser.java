@@ -94,6 +94,11 @@ public class DataParser {
         return null;
     }
 
+    /**
+     *
+     * @param result
+     * @param split
+     */
     private static void processSubentityDescription(Map<String, String> result, String[] split) {
         result.put(AMT, split[1].trim());
 
@@ -101,7 +106,7 @@ public class DataParser {
         for (int i = 2; i < split.length; i++) {
             sb.append(split[i]).append(" ");
         }
-        result.put(DESCRIPTION, sb.toString());
+        result.put(ENTITY, sb.toString());
     }
 
     public static Kostenstelle parseKostenstelle(String line) {

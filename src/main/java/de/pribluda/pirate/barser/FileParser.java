@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- * process supplied budget file and save data into mongo
+ * Parser für Haushaltsplan 2012-2013
  *
  * @author Konstantin Pribluda
  */

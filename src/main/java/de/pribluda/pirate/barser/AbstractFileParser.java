@@ -34,6 +34,7 @@ public abstract class AbstractFileParser {
     public static final String SOURCE = "source";
     // a-zA-ZäüößÄÜO\s
     private static final Pattern titlePattern = Pattern.compile("[^0-9]++");
+    public static final String PARENT = "parent";
 
     public static DBCollection connectMongo() throws UnknownHostException {
         Mongo m = new Mongo();
@@ -83,6 +84,12 @@ public abstract class AbstractFileParser {
             }
         }
 
+        // in case we have subentity,  entity becomes parent and entuty
+        // tag comes from subentity
+        if(subentityMap != null) {
+            entityMap.put(PARENT,entityMap.remove(DataParser.ENTITY));
+        }
+
 
         // process single lines
         lineNum++;
@@ -90,7 +97,7 @@ public abstract class AbstractFileParser {
 
             final List<Map<String, Object>> positions = extractPositions(lines[lineNum], valueLocations);
             if (positions != null) {
-                final String title = extractPositionName(lines[lineNum]);               
+                final String title = extractPositionName(lines[lineNum]);
                 // save to database
                 for (Map<String, Object> position : positions) {
                     position.putAll(entityMap);
@@ -113,9 +120,9 @@ public abstract class AbstractFileParser {
 
     public static String extractPositionName(String source) {
         final Matcher matcher = titlePattern.matcher(source);
-     matcher.find();
-       matcher.find();
-      //  System.err.println(matcher.start() + "/" + matcher.end());
+        matcher.find();
+        matcher.find();
+        //  System.err.println(matcher.start() + "/" + matcher.end());
         return source.substring(matcher.start(), matcher.end()).trim();
 
     }
