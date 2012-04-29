@@ -2,7 +2,7 @@ var process = function (json) {
     var x = 0,
         r = Raphael("chart", 2350, 550),
         labels = {},
-        textattr = {"font": '9px "Arial"', stroke: "none", fill: "#fff"},
+        textattr = {"font":'9px "Arial"', stroke:"none", fill:"#fff"},
         pathes = {},
         nmhldr = $("#name")[0],
         nmhldr2 = $("#name2")[0],
@@ -11,6 +11,7 @@ var process = function (json) {
         lgnd2 = $("#legend2")[0],
         usrnm2 = $("#username2")[0],
         plchldr = $("#placeholder")[0];
+
     function finishes() {
         for (var i in json.authors) {
             var start, end;
@@ -28,7 +29,8 @@ var process = function (json) {
                 var isin = false;
                 for (var k = 0, kk = json.buckets[j].i.length; k < kk; k++) {
                     isin = isin || (json.buckets[j].i[k][0] == i);
-                };
+                }
+                ;
                 if (isin) {
                     start = j;
                     break;
@@ -45,6 +47,7 @@ var process = function (json) {
             }
         }
     }
+
     function block() {
         var p, h;
         finishes();
@@ -62,14 +65,14 @@ var process = function (json) {
             }
             var dt = new Date(json.buckets[j].d * 1000);
             var dtext = dt.getDate() + " " + ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"][dt.getMonth()] + " " + dt.getFullYear();
-            r.text(x + 25, h + 10, dtext).attr({"font": '9px "Arial"', stroke: "none", fill: "#aaa"});
+            r.text(x + 25, h + 10, dtext).attr({"font":'9px "Arial"', stroke:"none", fill:"#aaa"});
             x += 100;
         }
         var c = 0;
         for (var i in pathes) {
             labels[i] = r.set();
             var clr = Raphael.getColor();
-            pathes[i].p = r.path().attr({fill: clr, stroke: clr});
+            pathes[i].p = r.path().attr({fill:clr, stroke:clr});
             var path = "M".concat(pathes[i].f[0][0], ",", pathes[i].f[0][1], "L", pathes[i].f[0][0] + 50, ",", pathes[i].f[0][1]);
             var th = Math.round(pathes[i].f[0][1] + (pathes[i].b[pathes[i].b.length - 1][1] - pathes[i].f[0][1]) / 2 + 3);
             labels[i].push(r.text(pathes[i].f[0][0] + 25, th, pathes[i].f[0][2]).attr(textattr));
@@ -89,7 +92,7 @@ var process = function (json) {
             for (var j = 1, jj = pathes[i].b.length; j < jj; j++) {
                 path = path.concat("C", pathes[i].b[j][0] + 70, ",", pathes[i].b[j - 1][1], ",", pathes[i].b[j][0] + 70, ",", pathes[i].b[j][1], ",", pathes[i].b[j][0] + 50, ",", pathes[i].b[j][1], "L", pathes[i].b[j][0], ",", pathes[i].b[j][1]);
             }
-            pathes[i].p.attr({path: path + "z"});
+            pathes[i].p.attr({path:path + "z"});
             labels[i].hide();
             var current = null;
             (function (i) {
@@ -109,6 +112,7 @@ var process = function (json) {
             })(i);
         }
     }
+
     if (json.error) {
         alert("Project not found. Try again.");
     } else {

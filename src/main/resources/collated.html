@@ -14,59 +14,59 @@
         }
     </style>
     <script>
-       var taps = [
+        var taps = [
             {
-                "title": "Maschinen und Fahrzeuge"  ,
-                "accept": function(kostenstelle) {
+                "title":"Maschinen und Fahrzeuge",
+                "accept":function (kostenstelle) {
                     return  (kostenstelle >= 16000002)
                 }
             },
             {
-                "title": "Zentrale Dienste" ,
-                "accept": function(kostenstelle) {
+                "title":"Zentrale Dienste",
+                "accept":function (kostenstelle) {
                     return  (kostenstelle == 1100008)
                 }
             },
             {
-                "title": "Schulbetrieb" ,
-                "accept": function(kostenstelle) {
+                "title":"Schulbetrieb",
+                "accept":function (kostenstelle) {
                     return  (kostenstelle >= 1300076 && kostenstelle <= 1300231) || (kostenstelle >= 1300005 && kostenstelle <= 1300009)
                 }
             } ,
 
             {
-                "title": "Bau und Beschaffung",
-                "accept": function(kostenstelle) {
+                "title":"Bau und Beschaffung",
+                "accept":function (kostenstelle) {
                     return  (kostenstelle == 1300018)
                 }
             },
             {
-                "title": "Gebäude"   ,
-                "accept": function(kostenstelle) {
+                "title":"Gebäude",
+                "accept":function (kostenstelle) {
                     return  (kostenstelle >= 15000004 && kostenstelle <= 15000417)
                 }
             } ,
 
             {
-                "title" : "Sekretariate und techn. Personal",
-                "accept": function(kostenstelle) {
+                "title":"Sekretariate und techn. Personal",
+                "accept":function (kostenstelle) {
                     return  (kostenstelle == 1300003)
                 }
             }  ,
 
             {
-                "title": "Andere Ausgaben",
-                "accept": function(kostenstelle) {
+                "title":"Andere Ausgaben",
+                "accept":function (kostenstelle) {
                     return true;
                 }
             }
         ];
 
         // collate
-        $.each(amt40, function(idx, position) {
+        $.each(amt40, function (idx, position) {
             var kstNumber = parseInt(position.kostenstelle);
 
-            $.each(taps, function(idx, tap) {
+            $.each(taps, function (idx, tap) {
                         if (tap.accept(kstNumber)) {
                             pos = tap[position.position] || 0;
                             tap[position.position] = pos + position.value;
@@ -82,54 +82,54 @@
 
         var inflowConfig = {
             // size of canvas
-            "width": 1200,
-            "height": 1000,
+            "width":1200,
+            "height":1000,
 
 
             // taps are sources and sinks for material flow
             "tapLeft":0,
-            "tapWidth": 200,
+            "tapWidth":200,
             "tapSpacing":0,
 
             "sinkLeft":800,
             "sinkWidth":200,
             "sinkSpacing":0,
 
-            "bezierOffset": 30,
+            "bezierOffset":30,
 
             "sinkCaptionProperty":"title",
 
-            "taps" : [
+            "taps":[
                 {
-                    "caption": "Aufwendungen f�r Sach- und Dienstleistungen",
+                    "caption":"Aufwendungen f�r Sach- und Dienstleistungen",
                     // data flowing out
-                    "out":"Aufwendungen f. Sach- und Dienstleistg." ,
-                    "attr": { fill: "#f00" , stroke: "#000", "stroke-width": 1,"fill-opacity":0.6, "stroke-opacity":0.9}
+                    "out":"Aufwendungen f. Sach- und Dienstleistg.",
+                    "attr":{ fill:"#f00", stroke:"#000", "stroke-width":1, "fill-opacity":0.6, "stroke-opacity":0.9}
 
 
                 },
 
                 {
-                    "caption": "Abschreibungen",
+                    "caption":"Abschreibungen",
                     // data flowing out
-                    "out":"Abschreibungen" ,
-                    "attr": { fill: "#0f0" , stroke: "#000", "stroke-width": 1,"fill-opacity":0.6, "stroke-opacity":0.9}
+                    "out":"Abschreibungen",
+                    "attr":{ fill:"#0f0", stroke:"#000", "stroke-width":1, "fill-opacity":0.6, "stroke-opacity":0.9}
 
 
                 },
                 {
-                    "caption": "Personalaufwendungen",
+                    "caption":"Personalaufwendungen",
                     // data flowing out
-                    "out":"Personalaufwendungen" ,
-                    "attr": { fill: "#00f" , stroke: "#000", "stroke-width": 1,"fill-opacity":0.6, "stroke-opacity":0.9}
+                    "out":"Personalaufwendungen",
+                    "attr":{ fill:"#00f", stroke:"#000", "stroke-width":1, "fill-opacity":0.6, "stroke-opacity":0.9}
 
 
                 } ,
                 {
-                    "caption": "Versorgungsaufwendungen",
+                    "caption":"Versorgungsaufwendungen",
                     // data flowing out
-                    "out":"Versorgungsaufwendungen" ,
-                    "attr": { fill: "#f0f" , stroke: "#000", "stroke-width": 1,"fill-opacity":0.6, "stroke-opacity":0.9}
+                    "out":"Versorgungsaufwendungen",
+                    "attr":{ fill:"#f0f", stroke:"#000", "stroke-width":1, "fill-opacity":0.6, "stroke-opacity":0.9}
 
                 }
             ]

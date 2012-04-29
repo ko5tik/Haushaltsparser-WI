@@ -10,8 +10,8 @@ function mapByEntity() {
 
     entity[this.year] = [
         {
-            "value": this.value,
-            "source": this.source,
+            "value":this.value,
+            "source":this.source,
             "qualifier":this.qualifier
         }
     ];
@@ -31,7 +31,7 @@ function reduceTitles(key, values) {
         // iterate over positions
         for (position in v) {
             // reuse year map for this position or create new
-            if(result[position] == undefined) {
+            if (result[position] == undefined) {
                 result[position] = {}
             }
             // extract position
@@ -40,8 +40,8 @@ function reduceTitles(key, values) {
             var collatedPosition = result[position];
 
             // iterate over years
-            for(year in newPosition) {
-                if(undefined === collatedPosition[year]) {
+            for (year in newPosition) {
+                if (undefined === collatedPosition[year]) {
                     collatedPosition[year] = [];
                 }
                 collatedPosition[year] = collatedPosition[year].concat(newPosition[year]);

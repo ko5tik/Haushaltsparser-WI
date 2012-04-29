@@ -86,8 +86,8 @@ public abstract class AbstractFileParser {
 
         // in case we have subentity,  entity becomes parent and entuty
         // tag comes from subentity
-        if(subentityMap != null) {
-            entityMap.put(PARENT,entityMap.remove(DataParser.ENTITY));
+        if (subentityMap != null) {
+            entityMap.put(PARENT, entityMap.remove(DataParser.ENTITY));
         }
 
 

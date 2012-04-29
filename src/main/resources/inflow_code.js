@@ -1,4 +1,4 @@
-var renderFlow = function(config, flowData) {
+var renderFlow = function (config, flowData) {
 
     var r = Raphael("chart", config.width, config.height);
 
@@ -6,13 +6,13 @@ var renderFlow = function(config, flowData) {
     var sinks = [];
 
     // pre-populate taps
-    $.each(config.taps, function(idx, tap) {
+    $.each(config.taps, function (idx, tap) {
         taps.push({
-            "title": tap.caption,
-            "out": tap.out,
-            "attr": tap.attr,
-            "value": 0,
-            "connectors": [] ,
+            "title":tap.caption,
+            "out":tap.out,
+            "attr":tap.attr,
+            "value":0,
+            "connectors":[],
 
             "x":config.tapLeft,
             "y":0,
@@ -26,12 +26,12 @@ var renderFlow = function(config, flowData) {
 
     // populate taps, sinks and create connectors
 
-    $.each(flowData, function(idx, value) {
+    $.each(flowData, function (idx, value) {
         //  populate sink,  copy all the interesting properties
         var sink = {
-            "title": value[config.sinkCaptionProperty],
+            "title":value[config.sinkCaptionProperty],
             "attr":value.attr,
-            "value": 0,
+            "value":0,
             "connectors":[],
 
             "x":config.sinkLeft,
@@ -42,14 +42,14 @@ var renderFlow = function(config, flowData) {
 
         sinks.push(sink);
 
-        $.each(taps, function(idx, tap) {
+        $.each(taps, function (idx, tap) {
             //  entry has something for this bin?
             if (value[tap.out]) {
                 // extract vata value
                 var dataValue = value[tap.out];
                 // connector
                 var connector = {
-                    "value": dataValue,
+                    "value":dataValue,
                     "tap":tap,
                     "sink":sink,
                     "tapOffset":tap.value,
@@ -79,7 +79,7 @@ var renderFlow = function(config, flowData) {
 
 
     // draw  taps and compute offsets
-    $.each(taps, function(idx, tap) {
+    $.each(taps, function (idx, tap) {
         if (tap.value > 0) {
             tap.y = top;
 
@@ -95,7 +95,7 @@ var renderFlow = function(config, flowData) {
     top = 0;
 
     // draw sinks computing offsets in process
-    $.each(sinks, function(idx, sink) {
+    $.each(sinks, function (idx, sink) {
         if (sink.value > 0) {
             sink.y = top;
 
@@ -109,9 +109,9 @@ var renderFlow = function(config, flowData) {
 
 
     // and now draw connectors
-    $.each(taps, function(idx, tap) {
+    $.each(taps, function (idx, tap) {
 
-        $.each(tap.connectors, function(idx, connector) {
+        $.each(tap.connectors, function (idx, connector) {
             var sink = connector.sink;
             // connectors are bezier splines
             var connectorLeft = tap.x + tap.w;
@@ -137,7 +137,7 @@ var renderFlow = function(config, flowData) {
                 // desctination point
                 connectorRight , connectorSinkFrom,
                 // line down
-                "L" ,connectorRight , connectorSinkTo,
+                "L" , connectorRight , connectorSinkTo,
                 // bezier back
                 "C",
                 // control point right
@@ -145,7 +145,7 @@ var renderFlow = function(config, flowData) {
                 // control point left
                 connectorLeft + config.bezierOffset , connectorTapTo,
                 // destination point
-                connectorLeft ,  connectorTapTo,
+                connectorLeft , connectorTapTo,
                 // close it
                 "Z"
             ].join(" ");

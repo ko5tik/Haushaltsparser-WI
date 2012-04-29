@@ -95,7 +95,6 @@ public class DataParser {
     }
 
     /**
-     *
      * @param result
      * @param split
      */
@@ -106,7 +105,7 @@ public class DataParser {
         for (int i = 2; i < split.length; i++) {
             sb.append(split[i]).append(" ");
         }
-        result.put(ENTITY, sb.toString());
+        result.put(ENTITY, sb.toString().trim());
     }
 
     public static Kostenstelle parseKostenstelle(String line) {
@@ -114,8 +113,8 @@ public class DataParser {
 
         if (fragments[0].toLowerCase().startsWith(KOSTENSSTELLENPREFIX)) {
             final String[] split = fragments[1].trim().split("\\s+");
-            String name = split[0];
-            String amt = split[1];
+            String name = split[0].trim();
+            String amt = split[1].trim();
 
             final StringBuilder titleBuilder = new StringBuilder();
             for (int i = 2; i < split.length; i++) {

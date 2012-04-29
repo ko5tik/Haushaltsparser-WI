@@ -24,10 +24,9 @@ lines = parser.processContent(696, renderListener).getResultantText().split("\n"
 lineNumber = 1;
 //lines.each { print   (lineNumber++) ; print  it ; print  "\n"  }
 
-
 // parse individual lines
 lines.each {
-    fragments =  it.split "\\s+";
+    fragments = it.split "\\s+";
     fragments.each { print it}
     print "\n"
 

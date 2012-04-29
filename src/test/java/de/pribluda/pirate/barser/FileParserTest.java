@@ -25,7 +25,7 @@ public class FileParserTest {
 
         String values = "     1 privatrechtliche Leistungsentgelte                     12.368.143-    12.460.103-    12.404.380- 12.982.519,74-";
 
-         List<Map<String, Object>> positions = fileParser.extractPositions(values, locations);
+        List<Map<String, Object>> positions = fileParser.extractPositions(values, locations);
 
         assertEquals(new Integer(-12368143), positions.get(0).get(AbstractFileParser.VALUE_TAG));
         assertEquals(new Integer(-12460103), positions.get(1).get(AbstractFileParser.VALUE_TAG));
@@ -34,7 +34,7 @@ public class FileParserTest {
 
         values = "     1 privatrechtliche Leistungsentgelte                     12.368.143-                   12.404.380- 12.982.519,74-";
 
-         positions = fileParser.extractPositions(values, locations);
+        positions = fileParser.extractPositions(values, locations);
 
         assertEquals(new Integer(-12368143), positions.get(0).get(AbstractFileParser.VALUE_TAG));
         assertEquals(new Integer(-12404380), positions.get(1).get(AbstractFileParser.VALUE_TAG));
@@ -49,6 +49,6 @@ public class FileParserTest {
         String values = "     1 privatrechtliche Leistungsentgelte                     12.368.143-    12.460.103-    12.404.380- 12.982.519,74-";
         final String title = AbstractFileParser.extractPositionName(values);
 
-        assertEquals("privatrechtliche Leistungsentgelte",title);
+        assertEquals("privatrechtliche Leistungsentgelte", title);
     }
 }

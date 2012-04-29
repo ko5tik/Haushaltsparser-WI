@@ -12,7 +12,6 @@ public class Field {
     int end;
 
     /**
-     *
      * @param start inclusive
      * @param end   exclusive
      */
@@ -46,6 +45,6 @@ public class Field {
     }
 
     public String extract(String source) {
-        return source.substring(start,end);
+        return source.substring(start, end).trim();
     }
 }

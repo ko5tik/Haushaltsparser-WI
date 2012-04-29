@@ -7,7 +7,7 @@ package de.pribluda.pirate.barser.beans;
 /**
  * represents certain amt
  *
- * @author  Konstantin Pribluda
+ * @author Konstantin Pribluda
  */
 public class Amt {
 

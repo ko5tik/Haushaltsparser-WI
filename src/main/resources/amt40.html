@@ -21,7 +21,7 @@
         // preprocess data
         var spending = {};
 
-        $.each(amt40, function(idx, position) {
+        $.each(amt40, function (idx, position) {
             var kstNumber = parseInt(position.kostenstelle);
             if (kstNumber >= 1300076 && kstNumber <= 1300231) {
                 var key = position.position + ", " + position.kostenstelle;
@@ -39,46 +39,46 @@
 
         var inflowConfig = {
             // size of canvas
-            "width": 1200,
-            "height": 10000,
+            "width":1200,
+            "height":10000,
 
 
             // taps are sources and sinks for material flow
             "tapLeft":0,
-            "tapWidth": 150,
+            "tapWidth":150,
             "tapSpacing":0,
 
             "sinkLeft":850,
             "sinkWidth":150,
             "sinkSpacing":0,
 
-            "bezierOffset": 30,
+            "bezierOffset":30,
 
             "sinkCaptionProperty":"title",
 
-            "taps" : [
+            "taps":[
                 {
-                    "caption": "Aufwendungen für Sach- und Dienstleistungen",
+                    "caption":"Aufwendungen für Sach- und Dienstleistungen",
                     // data flowing out
-                    "out":"Aufwendungen f. Sach- und Dienstleistg." ,
-                    "attr": { fill: "#f00" , stroke: "#000", "stroke-width": 1,"fill-opacity":0.6, "stroke-opacity":0.9}
+                    "out":"Aufwendungen f. Sach- und Dienstleistg.",
+                    "attr":{ fill:"#f00", stroke:"#000", "stroke-width":1, "fill-opacity":0.6, "stroke-opacity":0.9}
 
 
                 },
 
                 {
-                    "caption": "Abschreibungen",
+                    "caption":"Abschreibungen",
                     // data flowing out
-                    "out":"Abschreibungen" ,
-                    "attr": { fill: "#0f0" , stroke: "#000", "stroke-width": 1,"fill-opacity":0.6, "stroke-opacity":0.9}
+                    "out":"Abschreibungen",
+                    "attr":{ fill:"#0f0", stroke:"#000", "stroke-width":1, "fill-opacity":0.6, "stroke-opacity":0.9}
 
 
                 },
                 {
-                    "caption": "Personalaufwendungen",
+                    "caption":"Personalaufwendungen",
                     // data flowing out
-                    "out":"Personalaufwendungen" ,
-                    "attr": { fill: "#00f" , stroke: "#000", "stroke-width": 1,"fill-opacity":0.6, "stroke-opacity":0.9}
+                    "out":"Personalaufwendungen",
+                    "attr":{ fill:"#00f", stroke:"#000", "stroke-width":1, "fill-opacity":0.6, "stroke-opacity":0.9}
 
 
                 }/* ,
