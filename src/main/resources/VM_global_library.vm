@@ -1,0 +1,28 @@
+## render position into table with blackjack and hookers
+#macro( table_position $entity $name )
+
+    #set( $position = $entity.value.positions[$name])
+
+    #foreach( $sourceKey in $position.keySet())
+    <tr>
+        #if($velocityCount == 1)
+            <td rowspan="$position.size()" valign="top">
+                <b>$name</b> :
+            </td>
+        #end
+
+        <td>
+            $sourceKey
+        </td>
+
+        #set( $source = $position.get($sourceKey)))
+
+        #foreach( $year  in $entity.value.years)
+            <td align="right">
+                  $!source.values.get($year)
+            </td>
+        #end
+    </tr>
+    #end
+
+#end

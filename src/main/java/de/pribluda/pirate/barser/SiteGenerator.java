@@ -36,7 +36,7 @@ public class SiteGenerator {
         mongo = new Mongo();
         db = mongo.getDB(database);
 
-        titles = db.getCollection("titles");
+        titles = db.getCollection("graph");
 
     }
 
@@ -48,7 +48,7 @@ public class SiteGenerator {
      */
     public static void main(String[] args) throws IOException {
         if (args.length < 2) {
-            System.err.println("usage: java SiteGenerator.class <mongo database connection> <destination path>");
+            System.err.println("usage: java SiteGenerator.class <destination path>  <mongo database connection>");
         }
 
         final SiteGenerator siteGenerator = new SiteGenerator(args[0], args[1]);
