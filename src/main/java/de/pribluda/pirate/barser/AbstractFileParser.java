@@ -29,7 +29,7 @@ public abstract class AbstractFileParser {
     public static final String YEAR = "year";
     public static final String QUALIFIER = "qualifier";
     public static final String ANSATZ = "Ansatz";
-    public static final String ERGEBNINS = "Ergebnins";
+    public static final String ERGEBNINS = "Ergebnis";
     public static final Pattern NUMBER_PATTERN = Pattern.compile("[0-9\\,\\.-]+");
     public static final String SOURCE = "source";
     // a-zA-ZäüößÄÜO\s

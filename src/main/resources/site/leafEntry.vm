@@ -1,16 +1,15 @@
 <html>
 <head>
     <title>$entity.value.title</title>
+    <link rel="stylesheet" href="./style.css" type="text/css" media="all"/>
 </head>
 <body>
 <h2>$entity.value.title</h2>
 
 
+
 <table>
     <tr>
-        <td>
-
-        </td>
         <td>
 
         </td>
@@ -20,10 +19,21 @@
             </td>
         #end
     </tr>
+    #table_position( $entity  "ordentliche Erträge" )
+    #table_position( $entity  "privatrechtliche Leistungsentgelte" )
     #table_position( $entity  "öffentl.-rechtliche Leistungsentgelte" )
+    #table_position( $entity  "Kostenerstattungen und Kostenumlagen" )
+    #table_position( $entity  "Bestandsveränder./andere akt.Eigenleist." )
+    #table_position( $entity  "Steuern und ähnliche Abgaben" )
+    #table_position( $entity  "Erträge aus Transferleistungen" )
+    #table_position( $entity  "Zuwendungen und allgemeine Umlagen" )
+    #table_position( $entity  "Erträge Auflösg.v.Sopos Inv.zuweisungen" )
+    #table_position( $entity  "sonstige ordentliche Erträge" )
+
+
+
 </table>
 
-    $entity
 
 
 </body>

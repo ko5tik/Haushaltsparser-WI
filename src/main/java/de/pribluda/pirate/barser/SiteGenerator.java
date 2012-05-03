@@ -3,6 +3,7 @@ package de.pribluda.pirate.barser;
 import com.mongodb.*;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.tools.generic.SortTool;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -70,8 +71,10 @@ public class SiteGenerator {
         }
 
         // ok, entry found create context
+
         final VelocityContext velocityContext = new VelocityContext();
         velocityContext.put("entity", entry);
+        velocityContext.put("sorter", new SortTool());
 
         // create writer
         final FileWriter fileWriter = new FileWriter(destinationPath + File.separator + entity + ".html");

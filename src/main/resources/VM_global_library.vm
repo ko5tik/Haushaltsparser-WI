@@ -2,27 +2,30 @@
 #macro( table_position $entity $name )
 
     #set( $position = $entity.value.positions[$name])
-
-    #foreach( $sourceKey in $position.keySet())
-    <tr>
-        #if($velocityCount == 1)
-            <td rowspan="$position.size()" valign="top">
-                <b>$name</b> :
+    <tr class="result">
+        <td align="right"  class="title">
+            <b>$name</b>
+        </td>
+        #foreach( $year  in $entity.value.years)
+            <td align="right"  class="value">
+                $!position.results.get($year)
             </td>
         #end
+    </tr>
 
-        <td>
+    #foreach( $sourceKey in $sorter.sort($position.expectations.keySet()))
+    <tr class="estimation">
+        <td align="right" class="title">
             $sourceKey
         </td>
 
-        #set( $source = $position.get($sourceKey)))
+        #set( $source = $position.expectations.get($sourceKey))
 
         #foreach( $year  in $entity.value.years)
-            <td align="right">
-                  $!source.values.get($year)
+            <td align="right" class="value">
+                $!source.get($year)
             </td>
         #end
     </tr>
     #end
-
 #end

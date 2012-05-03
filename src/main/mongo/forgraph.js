@@ -15,18 +15,25 @@ function mapEntities() {
 
     entity.title = this.Entity;
 
-    // source value is keyed by title,
-    // and described by qualifier. it also provides
-    // map of years. data series can be created in finalisation step
-    var source = {
-        qualifier:this.qualifier,
-        values:{}
+    // position is designated by title
+    var position = {
+        // expectation data rows keyed by source
+        expectations:{},
+        // actial results keyed by year
+        results:{}
     };
-    source.values[this.year] = this.value;
 
-    // position is designated by title, and has data series from various sources
-    var position = { };
-    position[this.source] = source;
+    if (this.qualifier == "Ergebnis") {
+        // this is real value
+        position.results[this.year] = this.value
+    } else {
+        // compose expectation value
+        // and described by qualifier. it also provides
+        // map of years. data series will be created in finalisation step
+        var source = { };
+        source[this.year] = this.value;
+        position.expectations[this.source] = source;
+    }
 
     // store position and year in the entity
     entity.positions[this.title] = position;
@@ -57,33 +64,42 @@ function reduceEntities(key, values) {
         for (year in value.years) {
             res.years[year] = null;
         }
-        // positions in object
+        // iterate over positions
         for (var positionName in value.positions) {
             // create ot retrieve position object
             var position = cumulatedPositions[positionName];
+
+            // ... store it if not defined
             if (position === undefined) {
-                position = {};
+                position = {
+                    expectations:{},
+                    results:{}
+                };
                 cumulatedPositions[positionName] = position;
             }
 
-            // process sources inside position
+            // merge data stored in position
             var positionObject = value.positions[positionName];
-            for (var sourceName in positionObject) {
+
+            // process expectations
+            for (var sourceName in positionObject.expectations) {
                 // create or retrieve sourceData
-                var source = position[sourceName];
-                if(source == undefined) {
+                var source = position.expectations[sourceName];
+                if (source == undefined) {
                     source = {
-                        values:{}
                     };
-                    position[sourceName] = source;
+                    position.expectations[sourceName] = source;
                 }
 
                 // process concrete source, iterate over years
-                for(var year in positionObject[sourceName].values) {
-                    source.values[year] = positionObject[sourceName].values[year];
+                for (var year in positionObject.expectations[sourceName]) {
+                    source[year] = positionObject.expectations[sourceName][year];
                 }
             }
-
+            // process results
+            for (var resultYear in positionObject.results) {
+                position.results[resultYear] = positionObject.results[resultYear];
+            }
 
         }
 
