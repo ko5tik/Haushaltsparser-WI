@@ -1,20 +1,20 @@
 ## render position into table with blackjack and hookers
-#macro( table_position $entity $name )
+#macro( table_position $entity $name  $class )
 
     #set( $position = $entity.value.positions[$name])
-    <tr class="result">
+    <tr class="result $!class">
         <td align="right"  class="title">
             <b>$name</b>
         </td>
         #foreach( $year  in $entity.value.years)
             <td align="right"  class="value">
-                $!position.results.get($year)
+                $!number.currency($position.results.get($year))
             </td>
         #end
     </tr>
 
     #foreach( $sourceKey in $sorter.sort($position.expectations.keySet()))
-    <tr class="estimation">
+    <tr class="estimation $!class">
         <td align="right" class="title">
             $sourceKey
         </td>
@@ -23,7 +23,7 @@
 
         #foreach( $year  in $entity.value.years)
             <td align="right" class="value">
-                $!source.get($year)
+                $!number.currency($source.get($year))
             </td>
         #end
     </tr>

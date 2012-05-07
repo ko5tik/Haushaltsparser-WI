@@ -7,7 +7,14 @@
 <h2>$entity.value.title</h2>
 
 
-    #parse( "/site/entityData.vm")
+#parse( "/site/entityData.vm")
+
+
+<ul>
+    #foreach( $silbing in $silbings)
+         <li>$silbing</li>
+    #end
+</ul>
 
 </body>
 </html>

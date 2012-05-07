@@ -1,10 +1,17 @@
 <html>
 
 <head>
-    <title>$title</title>
+    <title>Haushalt Wiesbaden</title>
 </head>
 <body>
-
+    <h3>Ämter und Dezernate</h3>
+    <ul>
+        #foreach( $entity in $sorter.sort($entities))
+            <li>
+                <a href="./${name.normalize($entity)}.html">$entity</a>
+            </li>
+        #end
+    </ul>
 </body>
 
 </html>

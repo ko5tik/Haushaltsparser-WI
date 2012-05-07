@@ -1,0 +1,40 @@
+
+
+<table class="contentTable">
+    <tr class="header">
+        <td>
+
+        </td>
+        #foreach( $year in $entity.value.years)
+            <td>
+                $year
+            </td>
+        #end
+    </tr>
+
+    #table_position( $entity  "Verwaltungsergebnis" "groupTotal")
+
+    #table_position( $entity  "ordentliche Erträge" "totalPositive")
+    #table_position( $entity  "privatrechtliche Leistungsentgelte" )
+    #table_position( $entity  "öffentl.-rechtliche Leistungsentgelte" )
+    #table_position( $entity  "Kostenerstattungen und Kostenumlagen" )
+    #table_position( $entity  "Bestandsveränder./andere akt.Eigenleist." )
+    #table_position( $entity  "Steuern und ähnliche Abgaben" )
+    #table_position( $entity  "Erträge aus Transferleistungen" )
+    #table_position( $entity  "Zuwendungen und allgemeine Umlagen" )
+    #table_position( $entity  "Erträge Auflösg.v.Sopos Inv.zuweisungen" )
+    #table_position( $entity  "sonstige ordentliche Erträge" )
+
+    #table_position( $entity  "ordentlicher Aufwand" "totalNegative")
+    #table_position( $entity  "Personalaufwendungen" )
+    #table_position( $entity  "Versorgungsaufwendungen" )
+    #table_position( $entity  "Aufwendungen f. Sach- und Dienstleistg." )
+    #table_position( $entity  "Abschreibungen" )
+    #table_position( $entity  "Aufwend.für Zuweisg./Zusch.+ Finanzausg." )
+    #table_position( $entity  "Steueraufw.u.Aufw.aus gesetzl.Uml.verpfl" )
+    #table_position( $entity  "Transferaufwendungen" )
+    #table_position( $entity  "sonstige ordentliche Aufwendungen" )
+
+
+
+</table>
