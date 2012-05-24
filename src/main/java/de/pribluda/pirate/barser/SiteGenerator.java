@@ -76,14 +76,21 @@ public class SiteGenerator {
      * create start page / just iterate over top entities
      */
     public void createStartPage() throws IOException {
+
+        //  top level entities have no parents
         final BasicDBObject query = new BasicDBObject();
         query.put("parent",new BasicDBObject("$exists", false));
 
         final List parentEntities = budget.distinct("Entity", query);
-
         velocityContext.put("entities",parentEntities);
 
-        mergeTemplate("site/start.vm",velocityContext,destinationPath + File.separator + "index.html");
+        // also show structure
+        final BasicDBObject structureQuery = new BasicDBObject();
+        final DBCollection structure = db.getCollection("structure");
+        velocityContext.put("structure",structure);
+
+
+        mergeTemplate("site/start.vm", velocityContext, destinationPath + File.separator + "index.html");
 
         // iterate over the parents and create their pages
         for(Object parentTitle : parentEntities) {

@@ -2,16 +2,53 @@
 
 <head>
     <title>Haushalt Wiesbaden</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js">
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $(".toggle_entry").click(function () {
+                $(this).children().toggle();
+            });
+
+
+            $(".hidden").hide();
+        });
+    </script>
 </head>
 <body>
-    <h3>Ämter und Dezernate</h3>
-    <ul>
-        #foreach( $entity in $sorter.sort($entities))
-            <li>
-                <a href="./${name.normalize($entity)}.html">$entity</a>
-            </li>
-        #end
-    </ul>
+
+<ul>
+    #foreach( $dezernat in  $sorter.sort($structure.distinct("_id")))
+        <li class="toggle_entry">
+            $dezernat
+
+            #set( $aemte = $structure.findOne($dezernat).get("value").get("aemte"))
+            <ul>
+                #foreach( $amt in $sorter.sort($aemte.keySet()))
+                <li class="toggle_entry hidden">
+                    Amt $amt
+                    <ul>
+                        #foreach($entity in $sorter.sort($aemte.get($amt).keySet()))
+                            <li class="hidden">
+                                $entity
+                            </li>
+                        #end
+                    </ul>
+                #end
+            </ul>
+        </li>
+    #end
+</ul>
+
+<h3>Ämter und Dezernate</h3>
+<ul>
+    #foreach( $entity in $sorter.sort($entities))
+        <li>
+            <a href="./${name.normalize($entity)}.html">$entity</a>
+        </li>
+    #end
+</ul>
 </body>
 
 </html>
