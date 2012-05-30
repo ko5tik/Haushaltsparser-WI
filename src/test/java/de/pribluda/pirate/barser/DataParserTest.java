@@ -7,6 +7,7 @@ package de.pribluda.pirate.barser;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -163,4 +164,20 @@ public class DataParserTest {
         assertEquals(new Integer(161575), DataParser.processNumber("161.575,03"));
     }
 
+
+    /**
+     * shall supress on start:
+     * - "zu"
+     */
+    @Test
+    public void testThatUndesiredPrefixIsSupressedOnSubentityStart() {
+
+
+        Map<String, String> result = DataParser.extractSubentity("      Kostenstelle/Kostenstellengruppe:            1300112          zu 40 Budget Riederbergschule\n");
+        assertEquals("Budget Riederbergschule", result.get(DataParser.ENTITY));
+
+        result = DataParser.extractSubentity("      Kostenstelle/Kostenstellengruppe:            1300112          zu40 Budget Riederbergschule\n");
+        assertEquals("Budget Riederbergschule", result.get(DataParser.ENTITY));
+
+    }
 }

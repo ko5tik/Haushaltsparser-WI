@@ -8,11 +8,15 @@
     <script>
         $(document).ready(function () {
             $(".toggle_entry").click(function () {
-                $(this).children().toggle();
+                $(".hidden", this).toggle();
+                return false;
             });
 
-
+            $(".leaf").click(function () {
+                return false;
+            });
             $(".hidden").hide();
+
         });
     </script>
 </head>
@@ -30,7 +34,7 @@
                     Amt $amt
                     <ul>
                         #foreach($entity in $sorter.sort($aemte.get($amt).keySet()))
-                            <li class="hidden">
+                            <li class=" leaf hidden">
                                 $entity
                             </li>
                         #end

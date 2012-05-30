@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Utilities to parse various budget strings
@@ -27,6 +28,8 @@ public class DataParser {
     public static final String AMT = "amt";
     public static final String DESCRIPTION = "description";
     public static final String ACCOUNT_ID = "accountId";
+
+    private static final Pattern prefixSupressor = Pattern.compile("\\s{2}[zZ]u\\s*");
 
     public static Entity parseAmt(String line) {
         final String[] fragments = line.trim().split(":");
@@ -73,13 +76,13 @@ public class DataParser {
     public static Map<String, String> extractSubentity(String subentiyDesc) {
         Map<String, String> result = new HashMap<String, String>();
 
+
         final String[] fragments = subentiyDesc.trim().split(":");
         final String fragmentDesignator = fragments[0].toLowerCase();
         if (fragments.length < 2)
             return null;
 
-
-        final String[] split = fragments[1].trim().split("\\s+");
+        final String[] split = prefixSupressor.matcher(fragments[1].trim()).replaceAll("").split("\\s+");
 
         if (fragmentDesignator.startsWith(KOSTENSSTELLENPREFIX)) {
             result.put(ACCOUNT_ID, split[0].trim());
