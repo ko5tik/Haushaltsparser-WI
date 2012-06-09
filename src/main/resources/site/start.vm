@@ -7,13 +7,17 @@
 
     <script>
         $(document).ready(function () {
-            $(".toggle_entry").click(function () {
-                $(".hidden", this).toggle();
-                return false;
-            });
+            $(".toggle_entry").toggle(
+                    function () {
+                        $(".hidden", this).show();
+                    },
+                    function() {
+                        $(".hidden", this).hide();
+                    }
+            );
 
-            $(".leaf").click(function () {
-                return false;
+            $(".leaf").click(function (event) {
+                event.stopPropagation();
             });
             $(".hidden").hide();
 
@@ -34,8 +38,8 @@
                     Amt $amt
                     <ul>
                         #foreach($entity in $sorter.sort($aemte.get($amt).keySet()))
-                            <li class=" leaf hidden">
-                                $entity
+                            <li class="leaf hidden">
+                                <a href="$dezernat/$amt/${entity}.html">$entity</a>
                             </li>
                         #end
                     </ul>
@@ -45,7 +49,7 @@
     #end
 </ul>
 
-<h3>Ämter und Dezernate</h3>
+<h3>Top-Level</h3>
 <ul>
     #foreach( $entity in $sorter.sort($entities))
         <li>

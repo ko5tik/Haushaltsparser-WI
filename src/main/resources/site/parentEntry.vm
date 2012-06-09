@@ -2,6 +2,62 @@
 <head>
     <title>$entity.value.title</title>
     <link rel="stylesheet" href="./style.css" type="text/css" media="all"/>
+    <style type="text/css">
+        .header {
+            font-size: large;
+            font-weight: bold;
+        }
+
+
+        table.contentTable {
+            border-collapse: collapse;
+
+        }
+
+        table.contentTable td {
+            padding: 3px;
+        }
+
+        tr.header  td {
+            border-bottom: solid;
+            border-bottom-width: 2px;
+            border-bottom-color: black;
+
+            text-align: center;
+        }
+
+        .contentTable td {
+            border-right-style: dotted;
+            border-right-width: 1px;
+            border-right-color: black;
+        }
+
+        .groupTotal {
+            background-color: #dadeff;
+        }
+
+        .totalPositive {
+            background-color: #99ff90;
+        }
+
+        .totalNegative {
+            background-color: #ff938c;
+        }
+        .result {
+            font-weight: bold;
+
+        }
+
+        .result td {
+            border-top-style: solid;
+            border-top-width: 1px;
+        }
+
+        .estimation {
+            font-size: smaller;
+        }
+    </style>
+
 </head>
 <body>
 <h2>$entity.value.title</h2>

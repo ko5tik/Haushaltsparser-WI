@@ -69,7 +69,6 @@ public class SiteGenerator {
         final SiteGenerator siteGenerator = new SiteGenerator(args[0], args[1]);
 
         siteGenerator.createStartPage();
-        siteGenerator.createLeaf("41 Kulturamt", siteGenerator.destinationPath);
     }
 
     /**
@@ -84,6 +83,10 @@ public class SiteGenerator {
         final List parentEntities = budget.distinct("Entity", query);
         velocityContext.put("entities",parentEntities);
 
+        // entities with parents
+        query.put("parent",new BasicDBObject("$exists", true));
+        List silbings = budget.distinct("Entity", query);
+
         // also show structure
         final BasicDBObject structureQuery = new BasicDBObject();
         final DBCollection structure = db.getCollection("structure");
@@ -95,6 +98,24 @@ public class SiteGenerator {
         // iterate over the parents and create their pages
         for(Object parentTitle : parentEntities) {
             createParentPage(parentTitle.toString());
+        }
+
+        //  walk throught structure and create leaf entries
+
+        for(DBObject o: structure.find()) {
+            String dezernat = String.valueOf(o.get("_id"));
+            final DBObject value = (DBObject) o.get("value");
+
+            System.err.println("dezernat: " + dezernat);
+            final DBObject aemte = (DBObject) value.get("aemte");
+            for(String amt : aemte.keySet()) {
+                final DBObject kostenstellen = (DBObject) aemte.get(amt);
+                for(String kostenstelle: kostenstellen.keySet()) {
+                    System.err.println( dezernat + "/"  + amt + "/"  + kostenstelle);
+                    createLeaf(dezernat,amt,kostenstelle);
+                }
+            }
+
         }
     }
 
@@ -130,14 +151,11 @@ public class SiteGenerator {
 
         mergeTemplate("/site/parentEntry.vm", velocityContext, fileName);
 
-        // determine silbings
-
-
 
 
     }
 
-    public void createLeaf(String entity, String prefix) throws IOException {
+    public void createLeaf(String parent,  String amt, String entity) throws IOException {
 
         final DBObject entry = retrieveGraphEntity(entity);
 
@@ -146,12 +164,18 @@ public class SiteGenerator {
             return;
         }
 
+        System.err.println("entity:" + entity);
         // ok, entry found create context
         velocityContext.put("entity", entry);
 
-        final String fileName = prefix + File.separator + entity + ".html";
+        final StringBuffer fileName =  new StringBuffer();
+        fileName.append(destinationPath).append(File.separator)
+                .append(parent).append(File.separator)
+                .append(amt).append(File.separator)
+                .append(entity).append(".html");
 
-        mergeTemplate("/site/leafEntry.vm", velocityContext, fileName);
+        //System.out.println(fileName);
+        mergeTemplate("/site/leafEntry.vm", velocityContext, fileName.toString());
 
 
     }
@@ -169,9 +193,10 @@ public class SiteGenerator {
     }
 
     private void mergeTemplate(String templateName, VelocityContext velocityContext1, String fileName) throws IOException {
-
+        final File file = new File(fileName);
+        file.getParentFile().mkdirs();
         // create writer
-        final FileWriter fileWriter = new FileWriter(fileName);
+        final FileWriter fileWriter = new FileWriter(file);
 
         // merge
         velocityEngine.mergeTemplate(templateName, "UTF-8", velocityContext1, fileWriter);

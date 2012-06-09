@@ -1,31 +1,37 @@
 ## render position into table with blackjack and hookers
 #macro( table_position $entity $name  $class )
 
-    #set( $position = $entity.value.positions[$name])
+    #if($entity.value.positions[$name])
+        #set( $position = $entity.value.positions[$name])
+    #else
+        #set( $position = "")
+    #end
+
     <tr class="result $!class">
-        <td align="right"  class="title">
+        <td align="right" class="title">
             <b>$name</b>
         </td>
         #foreach( $year  in $entity.value.years)
-            <td align="right"  class="value">
+            <td align="right" class="value">
                 $!number.currency($position.results.get($year))
             </td>
         #end
     </tr>
 
     #foreach( $sourceKey in $sorter.sort($position.expectations.keySet()))
-    <tr class="estimation $!class">
-        <td align="right" class="title">
-            $sourceKey
-        </td>
 
-        #set( $source = $position.expectations.get($sourceKey))
-
-        #foreach( $year  in $entity.value.years)
-            <td align="right" class="value">
-                $!number.currency($source.get($year))
+        <tr class="estimation $!class">
+            <td align="right" class="title">
+                $sourceKey
             </td>
-        #end
-    </tr>
+
+            #set( $source = $position.expectations.get($sourceKey))
+
+            #foreach( $year  in $entity.value.years)
+                <td align="right" class="value">
+                    $!number.currency($source.get($year))
+                </td>
+            #end
+        </tr>
     #end
 #end
