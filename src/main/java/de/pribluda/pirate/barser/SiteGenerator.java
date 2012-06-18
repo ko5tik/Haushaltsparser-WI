@@ -88,10 +88,13 @@ public class SiteGenerator {
         List silbings = budget.distinct("Entity", query);
 
         // also show structure
-        final BasicDBObject structureQuery = new BasicDBObject();
-        final DBCollection structure = db.getCollection("structure");
-        velocityContext.put("structure",structure);
 
+        final DBCollection accountStructure = db.getCollection("accountStructure");
+        velocityContext.put("accountStructure",accountStructure);
+
+
+        final DBCollection productStructure = db.getCollection("productStructure");
+        velocityContext.put("productStructure",productStructure);
 
         mergeTemplate("site/start.vm", velocityContext, destinationPath + File.separator + "index.html");
 
@@ -100,6 +103,12 @@ public class SiteGenerator {
             createParentPage(parentTitle.toString());
         }
 
+        createLeafEntries(accountStructure);
+        createLeafEntries(productStructure);
+
+    }
+
+    private void createLeafEntries(DBCollection structure) throws IOException {
         //  walk throught structure and create leaf entries
 
         for(DBObject o: structure.find()) {
@@ -155,16 +164,17 @@ public class SiteGenerator {
 
     }
 
-    public void createLeaf(String parent,  String amt, String entity) throws IOException {
+    public void createLeaf(String parent, String amt, String entity) throws IOException {
 
         final DBObject entry = retrieveGraphEntity(entity);
 
-        if (entity == null) {
+        if (entry == null) {
             System.err.println("no entry  found for id: '" + entity + "'");
             return;
         }
 
         System.err.println("entity:" + entity);
+        //System.err.println("entry:" + entry);
         // ok, entry found create context
         velocityContext.put("entity", entry);
 

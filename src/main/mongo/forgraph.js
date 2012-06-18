@@ -4,16 +4,31 @@
 
 
 /**
- * key in collection is this.Entity
+ * key in collection either entity, or account or product id
  */
 function mapEntities() {
 
     var entity = {
         positions:{},
-        years:{}
+        years:{}  ,
+        entity: this.Entity
     };
 
-    entity.title = this.Entity;
+    // determine kind of entity
+    var key = undefined;
+
+    if( !(this.productId === undefined)) {
+         // have product id
+        key = this.productId;
+        entity.kind = "product";
+    } else if(!(this.accountId === undefined)) {
+        key = this.accountId;
+        entity.kind = "account";
+    } else {
+        // myst be top level
+        key = this.Entity;
+        entity.kind = "top"
+    }
 
     // position is designated by title
     var position = {
@@ -39,7 +54,7 @@ function mapEntities() {
     entity.positions[this.title] = position;
     entity.years[this.year] = null;
 
-    emit(this.Entity, entity);
+    emit(key, entity);
 }
 
 
@@ -50,7 +65,8 @@ function reduceEntities(key, values) {
 
     var res = {
         years:{},
-        title:values[0].title
+        kind: values[0].kind,
+        entity: values[0].entity
     };
 
 

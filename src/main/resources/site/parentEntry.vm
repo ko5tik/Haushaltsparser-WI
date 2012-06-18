@@ -1,6 +1,7 @@
 <html>
 <head>
-    <title>$entity.value.title</title>
+    <title>$entity.value.entity</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="./style.css" type="text/css" media="all"/>
     <style type="text/css">
         .header {
@@ -60,7 +61,7 @@
 
 </head>
 <body>
-<h2>$entity.value.title</h2>
+<h2>$entity.value.entity</h2>
 
 
 #parse( "/site/entityData.vm")

@@ -65,12 +65,14 @@ public abstract class AbstractFileParser {
         final String[] lines = resultantText.split("\n");
 
 
+        // extract first line of designator
         final Map<String, String> entityMap = DataParser.extractEntityData(lines[0]);
         if (entityMap == null)
             return;
 
         System.out.println(" ... accepted");
 
+        // extract second line, could be product or expense account
         final Map<String, String> subentityMap = DataParser.extractSubentity(lines[1]);
 
 

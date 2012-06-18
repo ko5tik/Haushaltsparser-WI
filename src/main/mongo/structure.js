@@ -3,28 +3,45 @@
  */
 
 
-// parent is the key,  and amt below it.  original entities are on leaf
-function mapEntities() {
+db.system.js.save(
+    {
+        _id:"emitStructureEntity",
+        value:function (amt, parent, key, title) {
+            // do we have case here? bail out ASAP
+            if (amt === undefined || parent === undefined || key === undefined) {
+                return;
+            }
 
-    // do we have case here? bail out ASAP
-    if (this.amt === undefined || this.parent === undefined || this.Entity === undefined) {
-        return;
+            var entity = {
+                aemte:{}
+            };
+
+            var qq = {};
+            qq[key] = title;
+
+            entity.aemte[amt] = qq;
+
+            // key  is parent
+            emit(parent, entity);
+        }
     }
-
-    var entity = {
-        aemte:{}
-    };
-
-    var qq = {};
-    qq[this.Entity] = null;
-
-    entity.aemte[this.amt] = qq;
+);
 
 
-    // key  is parent
-    emit(this.parent, entity);
+/**
+ * map accounts
+ * parent is the key,  and amt below it.  original entities are on leaf
+ */
 
+function mapAccountEntities() {
+    emitStructureEntity(this.amt, this.parent, this.accountId, this.Entity);
 }
+
+
+function matProductEntities() {
+    emitStructureEntity(this.amt, this.parent, this.productId, this.Entity);
+}
+
 
 function reduceEntities(key, values) {
 
@@ -47,8 +64,10 @@ function reduceEntities(key, values) {
                 titles = {};
                 cumulated[amt] = titles;
             }
-            for(var title in value.aemte[amt]) {
-                titles[title] = null;
+
+            var entities = value.aemte[amt]
+            for (var title in entities) {
+                titles[title] = entities[title];
             }
         }
     }
@@ -67,14 +86,28 @@ function finalizeEntries(key, value) {
 res = db.runCommand(
     {
         mapreduce:'budget',
-        map:mapEntities,
+        map:mapAccountEntities,
         reduce:reduceEntities,
         finalize:finalizeEntries,
-        out:"structure"
+        out:"accountStructure"
     }
-
 );
 
-print('ready');
 
 printjson(res);
+
+
+res = db.runCommand(
+    {
+        mapreduce:'budget',
+        map:matProductEntities,
+        reduce:reduceEntities,
+        finalize:finalizeEntries,
+        out:"productStructure"
+    }
+);
+
+
+printjson(res);
+
+

@@ -1,0 +1,23 @@
+<ul>
+#foreach( $dezernat in  $sorter.sort($structure.distinct("_id")))
+<li class="toggle_entry">
+    $dezernat
+
+    #set( $aemte = $structure.findOne($dezernat).get("value").get("aemte"))
+    <ul>
+        #foreach( $amt in $sorter.sort($aemte.keySet()))
+        <li class="toggle_entry hidden">
+            Amt $amt
+            <ul>
+                #set( $amtMap  = $aemte.get($amt))
+                #foreach($entity in $sorter.sort($amtMap.keySet()))
+                    <li class="leaf hidden">
+                        <a href="$dezernat/$amt/${entity}.html">$entity $amtMap.get($entity)</a>
+                    </li>
+                #end
+            </ul>
+        #end
+    </ul>
+</li>
+#end
+</ul>

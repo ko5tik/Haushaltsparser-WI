@@ -1,6 +1,7 @@
 <html>
 
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Haushalt Wiesbaden</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js">
     </script>
@@ -11,7 +12,7 @@
                     function () {
                         $(".hidden", this).show();
                     },
-                    function() {
+                    function () {
                         $(".hidden", this).hide();
                     }
             );
@@ -26,28 +27,28 @@
 </head>
 <body>
 
-<ul>
-    #foreach( $dezernat in  $sorter.sort($structure.distinct("_id")))
-        <li class="toggle_entry">
-            $dezernat
 
-            #set( $aemte = $structure.findOne($dezernat).get("value").get("aemte"))
-            <ul>
-                #foreach( $amt in $sorter.sort($aemte.keySet()))
-                <li class="toggle_entry hidden">
-                    Amt $amt
-                    <ul>
-                        #foreach($entity in $sorter.sort($aemte.get($amt).keySet()))
-                            <li class="leaf hidden">
-                                <a href="$dezernat/$amt/${entity}.html">$entity</a>
-                            </li>
-                        #end
-                    </ul>
-                #end
-            </ul>
-        </li>
-    #end
-</ul>
+<h3>Kostenstellen</h3>
+
+<p>
+    Aufklappen um die dazugehörige Ämter und Kostenstellen ansehen.
+</p>
+    #set( $structure = $accountStructure )
+
+    #parse('/site/strcture.vm')
+
+
+<h3>Produkte</h3>
+
+<p>
+    Aufklappen um die dazugehörige Ämter und Produkte ansehen.
+</p>
+
+    #set( $structure = $productStructure )
+
+    #parse('/site/strcture.vm')
+
+
 
 <h3>Top-Level</h3>
 <ul>
