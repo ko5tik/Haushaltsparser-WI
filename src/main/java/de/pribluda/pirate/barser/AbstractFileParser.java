@@ -10,10 +10,7 @@ import com.mongodb.Mongo;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,6 +41,8 @@ public abstract class AbstractFileParser {
     }
 
     public abstract Map<String, Object>[] valueTemplates();
+
+    private final Set<String> topLevelEntries = new HashSet<String>();
 
     /**
      * process incoming page
@@ -86,13 +85,20 @@ public abstract class AbstractFileParser {
             }
         }
 
-        // in case we have subentity,  entity becomes parent and entuty
+        // in case we have subentity,  entity becomes parent and entity
         // tag comes from subentity
         if (subentityMap != null) {
             entityMap.put(PARENT, entityMap.remove(DataParser.ENTITY));
+        } else {
+            // check for duplicate entities   and stop processing right now
+            // adjustEntityName(entityMap);
+            final String entityName = entityMap.get(DataParser.ENTITY);
+            if (topLevelEntries.contains(entityName)) {
+                System.err.println("bailing out on duplicate entity:" + entityName);
+                return;
+            }
+            topLevelEntries.add(entityName);
         }
-
-
         // process single lines
         lineNum++;
         for (; lineNum < lines.length; lineNum++) {
@@ -117,6 +123,15 @@ public abstract class AbstractFileParser {
         }
 
 
+    }
+
+    /**
+     * some top level entitites are double,  we have to adjust name to prevent collision
+     *
+     * @param entityMap
+     */
+    private void adjustEntityName(Map<String, String> entityMap) {
+        //To change body of created methods use File | Settings | File Templates.
     }
 
 
