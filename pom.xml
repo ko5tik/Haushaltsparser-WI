@@ -117,17 +117,17 @@
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>itextpdf</artifactId>
-            <version>5.1.2</version>
+            <version>5.4.4</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy</artifactId>
-            <version>1.8.3</version>
+            <artifactId>groovy-all</artifactId>
+            <version>2.2.0-rc-3</version>
         </dependency>
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>2.7.2</version>
+            <version>2.11.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.velocity</groupId>
@@ -140,14 +140,14 @@
             <version>2.0</version>
         </dependency>
         <dependency>
-            <groupId>mockit</groupId>
+            <groupId>com.googlecode.jmockit</groupId>
             <artifactId>jmockit</artifactId>
-            <version>0.996</version>
+            <version>1.5</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.9</version>
+            <version>4.11</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
