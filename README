@@ -6,6 +6,16 @@ und unverständlicher Form. Dies ist ein Versuch diese Problem zu lösen.
 
 Vorgenesweise
 
+0. Installieren sie aktuelle mongodb und starten sie den server
+
+1. Daten Parsen und in Mongo/DB einlesen.  (alle BudgetParser* ausführen, als Parameter Pfad zum entsprechenden Dokumenten angeben
+ Dokumente haben unterschiedliche Feld-Bezeichnungen -  also aufpassen). Denormalisierte Daten liegen nun im mongo vor.  ( mydb.budget )
+
+2. Skripte im src/main/mongo nacheinander ausführen ( mongo mydb <script name> ) .  Dadurcgh werden Daten für Website-Erstellung aufbereitet.
+
+3. Website generieren.    ( SiteGenerator ausführen, mit parametern db name und zielverzeichnis ) Website befindet sich nun im Verzechniss
+
+4. Schauen wo das schöne Geld abgeblieben ist.
 
 Zukunfstpläne
 
