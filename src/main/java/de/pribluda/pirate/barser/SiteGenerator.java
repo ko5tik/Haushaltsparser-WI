@@ -64,6 +64,7 @@ public class SiteGenerator {
     public static void main(String[] args) throws IOException {
         if (args.length < 2) {
             System.err.println("usage: java SiteGenerator.class <destination path>  <mongo database connection>");
+            System.exit(-1);
         }
 
         final SiteGenerator siteGenerator = new SiteGenerator(args[0], args[1]);

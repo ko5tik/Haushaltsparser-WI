@@ -69,11 +69,17 @@ public abstract class AbstractFileParser {
         if (entityMap == null)
             return;
 
-        System.out.println(" ... accepted");
+        System.out.println("Accepted  entity:" + entityMap.get(DataParser.ENTITY));
 
         // extract second line, could be product or expense account
         final Map<String, String> subentityMap = DataParser.extractSubentity(lines[1]);
-
+        if(null != subentityMap) {
+            StringBuilder builder = new StringBuilder();
+            for (Map.Entry<String, String> entry : subentityMap.entrySet()) {
+                builder.append(entry.getKey()).append(": '").append(entry.getValue()).append("' ");
+            }
+            System.out.println(builder.toString());
+        }
 
         // skip till field declaration , and extract field values
         int[][] valueLocations = null;

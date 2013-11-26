@@ -61,7 +61,7 @@ public class BudgetParser2013 extends  AbstractFileParser {
 
         // open PDF file
         final PdfReader pdfReader = new PdfReader(args[0]);
-        final BudgetParser20102011 budgetParser = new BudgetParser20102011();
+        final BudgetParser2013 budgetParser = new BudgetParser2013();
 
         DBCollection coll = connectMongo();
 

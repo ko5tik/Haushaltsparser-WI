@@ -2,6 +2,7 @@
  *  collate entries for graphical display
  */
 
+db.graph.drop()
 
 /**
  * key in collection either entity, or account or product id

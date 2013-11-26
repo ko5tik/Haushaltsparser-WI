@@ -2,18 +2,20 @@
  Map-Reduce job to generate structure out of leaf entries
  */
 
+db.productStructure.drop();
+db.accountStructure.drop();
 
 db.system.js.save(
     {
-        _id:"emitStructureEntity",
-        value:function (amt, parent, key, title) {
+        _id: "emitStructureEntity",
+        value: function (amt, parent, key, title) {
             // do we have case here? bail out ASAP
             if (amt === undefined || parent === undefined || key === undefined) {
                 return;
             }
 
             var entity = {
-                aemte:{}
+                aemte: {}
             };
 
             var qq = {};
@@ -46,7 +48,7 @@ function matProductEntities() {
 function reduceEntities(key, values) {
 
     var res = {
-        aemte:{}
+        aemte: {}
     };
 
 
@@ -82,14 +84,13 @@ function finalizeEntries(key, value) {
 }
 
 
-
 res = db.runCommand(
     {
-        mapreduce:'budget',
-        map:mapAccountEntities,
-        reduce:reduceEntities,
-        finalize:finalizeEntries,
-        out:"accountStructure"
+        mapreduce: 'budget',
+        map: mapAccountEntities,
+        reduce: reduceEntities,
+        finalize: finalizeEntries,
+        out: "accountStructure"
     }
 );
 
@@ -99,11 +100,11 @@ printjson(res);
 
 res = db.runCommand(
     {
-        mapreduce:'budget',
-        map:matProductEntities,
-        reduce:reduceEntities,
-        finalize:finalizeEntries,
-        out:"productStructure"
+        mapreduce: 'budget',
+        map: matProductEntities,
+        reduce: reduceEntities,
+        finalize: finalizeEntries,
+        out: "productStructure"
     }
 );
 

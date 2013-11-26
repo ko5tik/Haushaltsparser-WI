@@ -2,6 +2,11 @@
  collate   single year entries to yearly collections
  */
 
+
+
+db.titles.drop();
+
+
 // emit entity as key
 
 function mapByEntity() {
