@@ -1,22 +1,22 @@
 Ziel
+=========
 
-Werkzeuge für Analyse und visialisierung  wiesbadener Hausghaltsdaten. Diese Daten liegen als große und unübersichtlice
-PDF-Dokumente vor. Diese Dokumente enthalten sehr viele interessante und nutzliche Informationen in einer unübersichtlichen
-und unverständlicher Form. Dies ist ein Versuch diese Problem zu lösen.
+Schon mal daran nachgedacht wo das Geld im Wiesbaden herkommt, und wofür es ausgegeben wird? Diese Daten liegen als große und unübersichtlice PDF-Dokumente vor. Diese Dokumente enthalten sehr viele interessante und nutzliche Informationen in einer unübersichtlichen und unverständlicher Form. Dies ist ein Versuch dieses Problem zu lösen.
 
-Vorgenesweise
+Diese Daten sind mit dem hier verfügbaren Software aufbereitet und stehen unter dem URL:  (http://www.pribluda.de/haushalt_wi/)
+
+Vorgenesweise.
+=============
 
 0. Installieren sie aktuelle mongodb und starten sie den server
-
-1. Daten Parsen und in Mongo/DB einlesen.  (alle BudgetParser* ausführen, als Parameter Pfad zum entsprechenden Dokumenten angeben
- Dokumente haben unterschiedliche Feld-Bezeichnungen -  also aufpassen). Denormalisierte Daten liegen nun im mongo vor.  ( mydb.budget )
-
+1. Daten Parsen und in Mongo/DB einlesen.  (alle BudgetParser* ausführen, als Parameter Pfad zum entsprechenden Dokumenten angeben. Dokumente haben unterschiedliche Feld-Bezeichnungen -  also aufpassen). Denormalisierte Daten liegen nun im mongo vor.  ( mydb.budget )
 2. Skripte im src/main/mongo nacheinander ausführen ( mongo mydb <script name> ) .  Dadurcgh werden Daten für Website-Erstellung aufbereitet.
+3. Website generieren. ( SiteGenerator ausführen, mit Datenbank und Zielverzeichnis angeben).  Website befindet sich nun im Verzechniss
+4. Schauen wo eure Geld abgeblieben ist.
 
-3. Website generieren.    ( SiteGenerator ausführen, mit parametern db name und zielverzeichnis ) Website befindet sich nun im Verzechniss
+Fehler und Verbesserungsvorschläge
+==================================
 
-4. Schauen wo das schöne Geld abgeblieben ist.
-
-Zukunfstpläne
+Programme sind nach besten wissen erstellt, die Ergebnisse könne jedoch fehler beinhalten. Senden Sie bitte Fehlermeldungen und Verbesserungsvorschläge mir zu.
 
 
