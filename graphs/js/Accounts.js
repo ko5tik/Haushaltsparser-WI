@@ -1,7 +1,6 @@
 queue()
-    .defer(d3.json, "data/acounts.json")
+    .defer(d3.json, 'data/accounts.json')
     .await(makeGraphs);
-
 
 
 function makeGraphs(error, apiData) {
@@ -17,7 +16,6 @@ function makeGraphs(error, apiData) {
     var ndx = crossfilter(dataSet);
 
 
-
     var entity = ndx.dimension(function (d) {
         return d.Entity;
     });
@@ -31,7 +29,6 @@ function makeGraphs(error, apiData) {
     var dezernat = ndx.dimension(function (d) {
         return d.parent;
     })
-
 
 
     var year = ndx.dimension(function (d) {
