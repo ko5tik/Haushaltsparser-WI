@@ -17,7 +17,7 @@ function makeGraphs(error, apiData) {
 
 
     var entity = ndx.dimension(function (d) {
-        return d.Entity;
+        return d.Entity + ' (' + d.accountId + ')';
     });
 
 
@@ -40,6 +40,12 @@ function makeGraphs(error, apiData) {
     })
 
 
+    // source of data
+    var source = ndx.dimension(function (d) {
+        return d.source;
+    })
+
+
     var yearIncome = year.group().reduceSum(function (d) {
         // if ( d.accountId == 1100196 && 'Ergebnis' == d.qualifier && d.value < 0 ) {
         //     console.log(d.year + ' ' + d.title + ' '+d.value + ' ' + d.parent + ' ' + d.amt)
@@ -47,8 +53,18 @@ function makeGraphs(error, apiData) {
         return ('Ergebnis' == d.qualifier && d.value < 0) ? -d.value : 0;
     });
 
+
     var yearSpending = year.group().reduceSum(function (d) {
         return ('Ergebnis' == d.qualifier && d.value > 0) ? d.value : 0;
+    });
+
+
+    var projectedIncomes = [];
+
+    source.group().all().forEach(function (src) {
+        projectedIncomes.push(year.group().reduceSum(function (d) {
+            return ('Ansatz' == d.qualifier && src.key == d.source && d.value < 0 ) ? -d.value : 0;
+        }));
     });
 
 
@@ -61,23 +77,27 @@ function makeGraphs(error, apiData) {
     });
 
 
-
     amtField = dc.selectMenu('#amt')
         .dimension(amt)
-        .group(amtGroup);
+        .group(amtGroup)
+        .promptText('Alle');
 
     dezernatField = dc.selectMenu('#dezernat')
         .dimension(dezernat)
-        .group(dezernatGroup);
-
+        .group(dezernatGroup)
+        .promptText('Alle');
     entityField = dc.selectMenu('#entity')
         .dimension(entity)
-        .group(entityGroup);
+        .group(entityGroup)
+        .promptText('Alle')
+        .title(function (d) {
+
+            return d.key;
+        });
 
     var entitySpendingChart = dc.barChart("#entity-spending-chart");
     var entityEaringChart = dc.barChart("#entity-earning-chart");
     var positionsChart = dc.rowChart("#entity-positions-chart");
-
 
 
     entitySpendingChart
@@ -88,6 +108,7 @@ function makeGraphs(error, apiData) {
         .gap(5)
         .dimension(year)
         .group(yearSpending)
+        .stack(projectedIncomes[0])
         .x(d3.scale.ordinal().domain(year))
         .elasticY(true)
         .xUnits(dc.units.ordinal)
@@ -110,7 +131,6 @@ function makeGraphs(error, apiData) {
         .renderHorizontalGridLines(true)
         .renderVerticalGridLines(true)
         .yAxis().tickFormat(d3.format("s")).ticks(6);
-
 
 
     positionsChart
