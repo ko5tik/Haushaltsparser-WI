@@ -24,95 +24,71 @@
  */
 
 .chart-wrapper {
-  background: #fff;
-  border: 1px solid #e2e2e2;
-  border-radius: 3px;
-  margin-bottom: 10px;
+    background: #fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 3px;
+    margin-bottom: 10px;
 }
 
-
 .chart-wrapper .chart-title {
-  border-bottom: 1px solid #d7d7d7;
-  color: #666;
-  font-size: 14px;
-  font-weight: 200;
-  padding: 7px 10px 4px;
+    border-bottom: 1px solid #d7d7d7;
+    color: #666;
+    font-size: 14px;
+    font-weight: 200;
+    padding: 7px 10px 4px;
 }
 
 .chart-wrapper .chart-stage {
-  /*min-height: 240px;*/
-  overflow: hidden;
-  padding: 5px 10px;
-  position: relative;
+    /*min-height: 240px;*/
+    overflow: hidden;
+    padding: 5px 10px;
+    position: relative;
 }
 
 .chart-wrapper .chart-notes {
-  background: #fbfbfb;
-  border-top: 1px solid #e2e2e2;
-  color: #808080;
-  font-size: 12px;
-  padding: 8px 10px 5px;
-}
-.chart-wrapper svg{
-position: relative;
-left: 50%;
--webkit-transform: translateX(-50%);
--ms-transform: translateX(-50%);
-transform: translateX(-50%);
+    background: #fbfbfb;
+    border-top: 1px solid #e2e2e2;
+    color: #808080;
+    font-size: 12px;
+    padding: 8px 10px 5px;
 }
 
-.row > *{
+.chart-wrapper svg {
+    position: relative;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.row > * {
     padding-left: 20px !important;
 }
 
-.row+.row>* {
-    padding-top:5px !important;
+.row + .row > * {
+    padding-top: 5px !important;
+}
+
+.dc-select-menu {
+    background: #33CC99;
+    width: 80%;
+    border: none;
+    position: relative;
+    height: 31px;
+    font-size: 15px;
+    color: white;
+    vertical-align: middle;
+    text-align: center;
+    padding-top: 4px;
+    padding-bottom: 0px;
+
 }
 
 
-        #total-projects {
-                background: #33CC99;
-                width: 200px;
-                position:relative;
-                height:60px;
-                font-size: 29px;
-                color: white;
-                vertical-align: middle;
-                text-align: center;
-                padding-top: 12px;
-                padding-bottom: 0px;
-            }
 
-        #net-donations {
-                background: #33CC99;
-                width: 200px;
-                position:relative;
-                height:60px;
-                font-size: 29px;
-                color: white;
-                vertical-align: middle;
-                text-align: center;
-                padding-top: 12px;
-                padding-bottom: 0px;
-            }
-        .dc-select-menu {
-                background: #33CC99;
-                width: 80%;
-                border:none;
-                position:relative;
-                height:31px;
-                font-size: 15px;
-                color: white;
-                vertical-align: middle;
-                text-align: center;
-                padding-top: 4px;
-                padding-bottom: 0px;
-
-
-            }
-
-
-
+.menu-selector {
+    background-color: #33CC99;
+}
 
 .background {
     fill: #FFFFFF;
@@ -303,26 +279,29 @@ input[type='submit']:hover {
     text-align: center;
     width: 195px;
 }
+
 .footer-poweredbBy {
     float: right;
 }
+
 .footer-links {
 
 }
+
 a {
     color: #FFFFFF;
 }
 
-  .userDetailsAlertBox{
-        position: relative;
-        top: 80px;
-        left: 560px;
-        width: 250px;
-        height: 90px;
-        display:none;
-        background: #0093CF;
-        color: #ffffff;
-        font-size: 18px;
-        padding: 19px;
-        border-radius: 12px;
-    }
+.userDetailsAlertBox {
+    position: relative;
+    top: 80px;
+    left: 560px;
+    width: 250px;
+    height: 90px;
+    display: none;
+    background: #0093CF;
+    color: #ffffff;
+    font-size: 18px;
+    padding: 19px;
+    border-radius: 12px;
+}

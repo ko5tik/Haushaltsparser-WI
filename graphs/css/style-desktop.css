@@ -32,13 +32,9 @@
 	{
 		margin-bottom: 3em;
 	}
+
 	
 		#logo h1
-		{
-			color: #FFF;
-		}
-	
-		#logo h1 a
 		{
 			display: block;
 			letter-spacing: 1px;
