@@ -37,16 +37,21 @@
 
                 <p>
                     Dies ist die graphische Auswertung der wiesbadener Haushalt nach Kostenstellen und einzelnen Jahren.
-                    Graphiken sind interaktiv, und klickbar. Als Auswahl stehen die einzelnen Jahre, Änter, Dezernate,
+                    Graphiken sind interaktiv, und klickbar. Zu Auswahl stehen die einzelnen Jahre, Ämter, Dezernate,
                     Kosenstellen und sogar einzelne Posten. Daten Stammen au dem offiziellen PDF-DOkumenten, und sind
-                    leider
-                    nicht immer Stimmig. Aber es ist ja Verwaltung.
+                    leider nicht immer Stimmig. Aber es ist ja Verwaltung.
+                </p>
+                <p>
+                    Aktuelle Auswertung zeigt  tatsächliche ausgaben, die allerdings nicht für jedes Jahr vorliegen.  Grafische Darstellung der Ansatzdaten
+                    ist in Arbeit.  Ah,  und da ist noch der  Produktsicht - noch im Arbeit.
                 </p>
 
                 <p>
-                    Original Daten wurden von der Linken und Piraten Fraktion der Stadtverodneten Versammlung zu
-                    Verfügung
-                    gestellt
+                    Quellkode und Rohdaten? Aber Sicher. Schaut mal auf  dem <a href="https://github.com/ko5tik/Haushaltsparser-WI">Github</a>.
+                    Verbesserungsvorschläge und Ideen sind gerne willkommen.
+                </p>
+                <p>
+                    PS: Ich mache so was  das auch fürs Geld.  Falls Bedarf da ist - <a href="http://www.pribluda.de">einfach Fragen</a>.
                 </p>
             </div>
             <div class="row">
@@ -60,7 +65,7 @@
                     <div><span> &nbsp</span></div>
                 </div>
 
-                <div class="2u chart-wrapper  menu-selector" id="amt" >
+                <div class="2u chart-wrapper  menu-selector" id="amt">
                     <div class="chart-title"><strong> Amt </strong></div>
                 </div>
                 <div class="1u">
@@ -79,11 +84,6 @@
             </div>
 
             <div class="row">
-                <div class="10u chart-wrapper" id="composite-spending-chart">
-                    <div class="chart-title bold"><strong>Composite</strong></div>
-                </div>
-            </div>
-            <div class="row">
                 <div class="10u chart-wrapper" id="entity-earning-chart">
                     <div class="chart-title bold"><strong>Einnahmen</strong></div>
                 </div>
@@ -99,7 +99,9 @@
     </div>
     <div class="footer">
         <div class="footer-content-admin">
-            Administrative content
+            Haushaltsdaten wurden von der <a href="http://linke-und-piraten-wiesbaden.de/">Fraktion
+            LINKE&amp;PIRATEN</a> zu Verfügung gestellt.
+            Verwendete JS-Bibliotheken:  queue.js crossfilter.js , dc.js &amp; d3 js
         </div>
     </div>
     <script src='js/crossfilter.js' type='text/javascript'></script>

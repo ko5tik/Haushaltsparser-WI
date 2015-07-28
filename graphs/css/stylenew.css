@@ -243,18 +243,6 @@ input[type='submit']:hover {
     /*  display: block;
      width: 100%;
      height: 40px;*/
-}
-
-.wincere-logo {
-    background: url(../img/wincere-logo-new.png) no-repeat right 7px;
-    display: table;
-    height: 40px;
-    float: right;
-    line-height: 40px;
-    padding-right: 52px;
-    text-decoration: none;
-    width: auto;
-}
 
 .footer-top p {
     line-height: 40px;
@@ -289,7 +277,7 @@ input[type='submit']:hover {
 }
 
 a {
-    color: #FFFFFF;
+    color: #cccccc;
 }
 
 .userDetailsAlertBox {

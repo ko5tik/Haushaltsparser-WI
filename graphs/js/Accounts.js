@@ -80,12 +80,18 @@ function makeGraphs(error, apiData) {
     amtField = dc.selectMenu('#amt')
         .dimension(amt)
         .group(amtGroup)
-        .promptText('Alle');
+        .promptText('Alle')
+        .title(function (d) {
+            return d.key;
+        });
 
     dezernatField = dc.selectMenu('#dezernat')
         .dimension(dezernat)
         .group(dezernatGroup)
-        .promptText('Alle');
+        .promptText('Alle')
+        .title(function (d) {
+            return d.key;
+        });
     entityField = dc.selectMenu('#entity')
         .dimension(entity)
         .group(entityGroup)
@@ -95,7 +101,6 @@ function makeGraphs(error, apiData) {
         });
 
     var entitySpendingChart = dc.barChart("#entity-spending-chart");
-    var compositeSpendingChart = dc.compositeChart('#composite-spending-chart')
 
 
     var entityEaringChart = dc.barChart("#entity-earning-chart");
@@ -116,28 +121,6 @@ function makeGraphs(error, apiData) {
         .renderHorizontalGridLines(true)
         .renderVerticalGridLines(true)
         .yAxis().tickFormat(d3.format("s")).ticks(6);
-
-
-    var chartsToCompose = [entitySpendingChart];
-
-    projectedIncomes.forEach(function (group) {
-        chartsToCompose.push(dc.lineChart().dimension(year).group(group));
-    });
-
-
-    compositeSpendingChart.options(entitySpendingChart.options)
-        .xAxisLabel("Year")
-        .height(300)
-        .margins({top: 10, right: 10, bottom: 30, left: 50})
-        .dimension(year)
-        .group(yearSpending)
-        .x(d3.scale.ordinal().domain(year))
-        .elasticY(true)
-        .xUnits(dc.units.ordinal)
-        .renderHorizontalGridLines(true)
-        .renderVerticalGridLines(true)
-        .yAxis().tickFormat(d3.format("s")).ticks(6);
-    compositeSpendingChart.compose(chartsToCompose);
 
 
     entityEaringChart
