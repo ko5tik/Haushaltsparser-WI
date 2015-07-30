@@ -7,7 +7,6 @@ function makeGraphs(error, apiData) {
     var dataSet = apiData;
 
     // force value to be numeric
-    //
     dataSet.forEach(function (d) {
         d.value = +d.value;
         d.designator = d.year + ' ' + d.qualifier + ' (' + d.source + ')';
@@ -136,19 +135,19 @@ function makeGraphs(error, apiData) {
     entitySpendingChart
         .centerBar(false)
         .gap(10)
+        .colorCalculator(function (d, i) {
+            return 'orange'
+        })
         .dimension(designator)
         .group(yearSpending);
-    ;
+
 
     projectedSpendings.forEach(function (income, i) {
-        var graph = dc.barChart();
-        graph
+        spendings.push(dc.barChart(compositeSpendingChart)
             .dimension(designator)
             .group(income)
             .gap(10)
-            .centerBar(false);
-
-        spendings.push(graph);
+            .centerBar(false));
     });
 
 
@@ -179,6 +178,9 @@ function makeGraphs(error, apiData) {
     entityEaringChart.centerBar(false)
         .gap(10)
         .dimension(designator)
+        .colorCalculator(function (d, i) {
+            return 'orange'
+        })
         .group(yearEarnings);
 
     var earnings = [entityEaringChart];
