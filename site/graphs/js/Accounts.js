@@ -9,7 +9,8 @@ function makeGraphs(error, apiData) {
     // force value to be numeric
     //
     dataSet.forEach(function (d) {
-        d.value = +d.value
+        d.value = +d.value;
+        d.designator = d.year + ' ' + d.qualifier + ' (' + d.source + ')';
     });
 
 
@@ -46,6 +47,11 @@ function makeGraphs(error, apiData) {
     })
 
 
+    var designator = ndx.dimension(function (d) {
+        return d.designator;
+    });
+
+
     var yearIncome = year.group().reduceSum(function (d) {
         // if ( d.accountId == 1100196 && 'Ergebnis' == d.qualifier && d.value < 0 ) {
         //     console.log(d.year + ' ' + d.title + ' '+d.value + ' ' + d.parent + ' ' + d.amt)
@@ -54,7 +60,7 @@ function makeGraphs(error, apiData) {
     });
 
 
-    var yearSpending = year.group().reduceSum(function (d) {
+    var yearSpending = designator.group().reduceSum(function (d) {
         return ('Ergebnis' == d.qualifier && d.value > 0) ? d.value : 0;
     });
 
@@ -62,7 +68,7 @@ function makeGraphs(error, apiData) {
     var projectedIncomes = [];
 
     source.group().all().forEach(function (src) {
-        projectedIncomes.push(year.group().reduceSum(function (d) {
+        projectedIncomes.push(designator.group().reduceSum(function (d) {
             return ('Ansatz' == d.qualifier && src.key == d.source && d.value < 0 ) ? -d.value : 0;
         }));
     });
@@ -100,27 +106,59 @@ function makeGraphs(error, apiData) {
             return d.key;
         });
 
-    var entitySpendingChart = dc.barChart("#entity-spending-chart");
+
+    var compositeSpendingChart = dc.compositeChart("#entity-spending-chart")
 
 
-    var entityEaringChart = dc.barChart("#entity-earning-chart");
-    var positionsChart = dc.rowChart("#entity-positions-chart");
-
-
-    entitySpendingChart
-        .xAxisLabel("Year")
-        .height(300)
-        .margins({top: 10, right: 10, bottom: 30, left: 50})
-        .centerBar(false)
-        .gap(5)
-        .dimension(year)
-        .group(yearSpending)
-        .x(d3.scale.ordinal().domain(year))
+    compositeSpendingChart
+        .height(400)
+        .margins({top: 10, right: 10, bottom: 100, left: 50})
+        .dimension(designator)
+        .group(yearSpending, 'Ergebnis')
+        .x(d3.scale.ordinal().domain(designator))
         .elasticY(true)
         .xUnits(dc.units.ordinal)
         .renderHorizontalGridLines(true)
         .renderVerticalGridLines(true)
+        .colors(d3.scale.category10())
+        .shareColors(true)
         .yAxis().tickFormat(d3.format("s")).ticks(6);
+
+    var entitySpendingChart = dc.barChart(compositeSpendingChart);
+
+    var spendings = [entitySpendingChart];
+
+
+    entitySpendingChart
+        .centerBar(false)
+        .gap(10)
+        .dimension(designator)
+        .group(yearSpending);
+    ;
+
+    projectedIncomes.forEach(function (income, i) {
+        var graph = dc.barChart();
+        graph
+            .dimension(designator)
+            .group(income)
+            .gap(10)
+            .centerBar(false);
+
+        spendings.push(graph);
+    });
+
+
+    compositeSpendingChart.compose(spendings);
+    compositeSpendingChart.on('renderlet', function (chart) {
+        chart.selectAll("g.x text")
+
+            .attr('transform', "rotate(30)")
+            .style('text-anchor', 'start')
+    });
+
+
+    var entityEaringChart = dc.barChart("#entity-earning-chart");
+    var positionsChart = dc.rowChart("#entity-positions-chart");
 
 
     entityEaringChart
