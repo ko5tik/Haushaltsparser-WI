@@ -52,10 +52,7 @@ function makeGraphs(error, apiData) {
     });
 
 
-    var yearIncome = year.group().reduceSum(function (d) {
-        // if ( d.accountId == 1100196 && 'Ergebnis' == d.qualifier && d.value < 0 ) {
-        //     console.log(d.year + ' ' + d.title + ' '+d.value + ' ' + d.parent + ' ' + d.amt)
-        //}
+    var yearEarnings = designator.group().reduceSum(function (d) {
         return ('Ergebnis' == d.qualifier && d.value < 0) ? -d.value : 0;
     });
 
@@ -64,12 +61,19 @@ function makeGraphs(error, apiData) {
         return ('Ergebnis' == d.qualifier && d.value > 0) ? d.value : 0;
     });
 
+    // spendings as predicted bz different sources
+    var projectedSpendings = [];
 
-    var projectedIncomes = [];
+    //  earnings as predicted from various sources
+    var projectedEarnings = [];
 
     source.group().all().forEach(function (src) {
-        projectedIncomes.push(designator.group().reduceSum(function (d) {
+        projectedEarnings.push(designator.group().reduceSum(function (d) {
             return ('Ansatz' == d.qualifier && src.key == d.source && d.value < 0 ) ? -d.value : 0;
+        }));
+
+        projectedSpendings.push(designator.group().reduceSum(function (d) {
+            return ('Ansatz' == d.qualifier && src.key == d.source && d.value > 0 ) ? d.value : 0;
         }));
     });
 
@@ -136,7 +140,7 @@ function makeGraphs(error, apiData) {
         .group(yearSpending);
     ;
 
-    projectedIncomes.forEach(function (income, i) {
+    projectedSpendings.forEach(function (income, i) {
         var graph = dc.barChart();
         graph
             .dimension(designator)
@@ -151,31 +155,51 @@ function makeGraphs(error, apiData) {
     compositeSpendingChart.compose(spendings);
     compositeSpendingChart.on('renderlet', function (chart) {
         chart.selectAll("g.x text")
-
             .attr('transform', "rotate(30)")
             .style('text-anchor', 'start')
     });
 
 
-    var entityEaringChart = dc.barChart("#entity-earning-chart");
-    var positionsChart = dc.rowChart("#entity-positions-chart");
-
-
-    entityEaringChart
-        .x(d3.scale.ordinal().domain(year))
-        .xAxisLabel("Year")
-        .height(300)
-        .margins({top: 10, right: 10, bottom: 30, left: 50})
-        .centerBar(false)
-        .gap(5)
-        .dimension(year)
-        .group(yearIncome)
-        .x(d3.scale.ordinal().domain(year))
+    var compositeEarningsChart = dc.compositeChart("#entity-earning-chart");
+    compositeEarningsChart
+        .height(400)
+        .margins({top: 10, right: 10, bottom: 100, left: 50})
+        .dimension(designator)
+        .group(yearSpending, 'Ergebnis')
+        .x(d3.scale.ordinal().domain(designator))
         .elasticY(true)
         .xUnits(dc.units.ordinal)
         .renderHorizontalGridLines(true)
         .renderVerticalGridLines(true)
+        .colors(d3.scale.category10())
+        .shareColors(true)
         .yAxis().tickFormat(d3.format("s")).ticks(6);
+
+    var entityEaringChart = dc.barChart(compositeEarningsChart);
+    entityEaringChart.centerBar(false)
+        .gap(10)
+        .dimension(designator)
+        .group(yearEarnings);
+
+    var earnings = [entityEaringChart];
+
+    projectedEarnings.forEach(function (earning, i) {
+        earnings.push(dc.barChart(compositeEarningsChart)
+            .dimension(designator)
+            .group(earning)
+            .gap(10)
+            .centerBar(false));
+    });
+
+    compositeEarningsChart.compose(earnings);
+    compositeEarningsChart.on('renderlet', function (chart) {
+        chart.selectAll("g.x text")
+            .attr('transform', "rotate(30)")
+            .style('text-anchor', 'start')
+    });
+
+
+    var positionsChart = dc.rowChart("#entity-positions-chart");
 
 
     positionsChart
