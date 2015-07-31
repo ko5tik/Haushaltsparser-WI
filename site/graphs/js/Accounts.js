@@ -30,11 +30,6 @@ function makeGraphs(error, apiData) {
         return d.parent;
     })
 
-
-    var year = ndx.dimension(function (d) {
-        return d.year;
-    });
-
     var title = ndx.dimension(function (d) {
         return d.title;
     })
@@ -209,7 +204,7 @@ function makeGraphs(error, apiData) {
         .transitionDuration(500)
         .dimension(title)
         .group(titleTotal)
-        .margins({top: 10, right: 50, bottom: 30, left: 50})
+        .margins({top: 10, right: 100, bottom: 30, left: 50})
 
         .gap(5)
         .ordering(function (d) {
